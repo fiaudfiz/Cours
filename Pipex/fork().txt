@@ -1,0 +1,67 @@
+🧬 COURS : Le Fork (Clonage de Processus)
+1. Définition
+
+L'appel système fork() est le pilier de la gestion des processus sous UNIX. Il permet à un processus (le Père) de créer une copie conforme de lui-même (le Fils) dans un nouvel espace mémoire.
+2. Le Mécanisme du "Copy-on-Write" (COW)
+
+Contrairement à ce qu'on pourrait penser, fork() ne duplique pas immédiatement toute la RAM du père (ce qui serait très lent).
+
+    Le système partage d'abord la même mémoire physiquement.
+
+    La copie réelle ne se fait que si l'un des deux processus tente de modifier une donnée.
+
+    Conséquence : Le fork() est extrêmement rapide.
+
+3. Valeurs de Retour (Le sélecteur)
+
+C'est le seul moment en C où une fonction renvoie deux valeurs différentes au même instant (une dans chaque processus) :
+Processus	Valeur de retour de fork()
+Père	Le PID (Process ID) du fils (nombre > 0)
+Fils	0
+Erreur	-1 (si le système ne peut plus créer de processus)
+
+    Utilisation type : On utilise un if (pid == 0) pour dire au fils de faire son travail, et un else pour dire au père de surveiller.
+
+4. L'Héritage (Ce qui est copié)
+
+Le fils hérite de presque tout du père, mais attention aux points clés pour Pipex :
+
+    ✅ Descripteurs de fichiers (FD) : Le fils a accès aux mêmes fichiers et pipes ouverts que le père.
+
+    ✅ Variables : Les variables ont la même valeur au moment du fork, mais deviennent indépendantes ensuite.
+
+    ❌ PID : Le fils a son propre identifiant unique.
+
+5. Synchronisation et Cycle de Vie
+L'attente : wait & waitpid
+
+Un père ne doit jamais laisser ses fils mourir sans s'en occuper.
+
+    wait(int *status) : Attend qu'un de ses fils se termine.
+
+    waitpid(pid, &status, options) : Attend un fils spécifique (crucial si tu as plusieurs commandes).
+
+    Pourquoi ? Pour récupérer le code de sortie (exit status) et libérer les ressources système.
+
+Le Phénomène des Zombies 🧟
+
+Un processus Zombie est un fils qui a terminé son exécution (exit), mais dont le père n'a pas encore appelé wait().
+
+    Il reste une "entrée" dans la table des processus du noyau.
+
+    Danger : Trop de zombies peuvent saturer le système et empêcher la création de nouveaux processus.
+
+Les Orphelins
+
+Si le père meurt avant le fils, le fils devient un Orphelin. Il est alors automatiquement adopté par le processus init (PID 1), qui se chargera de faire le wait() à sa place.
+6. Application dans Pipex
+
+Dans ton projet, tu utiliseras fork() pour que chaque commande (cmd1, cmd2) s'exécute dans son propre espace :
+
+    Le Père crée le pipe.
+
+    Le Père fork le premier fils (pour cmd1).
+
+    Le Père fork le second fils (pour cmd2).
+
+    Le Père ferme ses pipes et attend ses deux fils avec waitpid.
