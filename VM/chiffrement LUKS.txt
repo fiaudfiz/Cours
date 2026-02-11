@@ -1,0 +1,46 @@
+Cours — LUKS (Linux Unified Key Setup)
+
+Définition
+LUKS est :
+le standard de chiffrement des partitions pour les systèmes GNU/Linux.
+
+Objectifs
+sécuriser les données au repos
+protéger les partitions contre l’accès non autorisé
+garantir la compatibilité entre différentes distributions Linux
+
+Remarques
+Il existe d’autres alternatives, mais LUKS reste incontournable dans l’écosystème Linux.
+LUKS fonctionne au niveau bloc, donc il chiffre tout le contenu de la partition.
+
+Passphrase / clé de déchiffrement
+Définition
+La passphrase est la clé qui permet de déchiffrer la partition.
+Recommandations
+Longueur : au moins 150 bits (≈ 20 caractères aléatoires)
+LUKS permet jusqu’à 8 passphrases différentes par partition
+pratique pour donner accès à plusieurs utilisateurs
+chaque passphrase peut être ajoutée ou retirée sans reconfigurer la partition entière
+
+L’en-tête LUKS
+Définition
+L’en-tête LUKS contient :
+toutes les informations nécessaires pour déchiffrer la partition
+les clés chiffrées
+les paramètres du chiffrement (algorithme, mode, etc.)
+Importance
+Sauvegarder l’en-tête est crucial
+→ si l’en-tête est perdu ou corrompu, les données deviennent irrécupérables, même si on connaît la passphrase.
+
+Fonctionnement général
+Création de la partition chiffrée
+Définition d’une ou plusieurs passphrases
+L’en-tête LUKS est écrit au début de la partition
+Le système utilise cette clé pour monter et accéder aux données
+
+Résumé ultra-synthèse
+LUKS = standard de chiffrement Linux
+Passphrase = clé pour déchiffrer
+Max 8 passphrases par partition
+En-tête = indispensable pour récupérer les données
+Sauvegarde obligatoire

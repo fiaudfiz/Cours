@@ -1,0 +1,33 @@
+long double            // 16 octets
+
+double                 // 8 octets
+long long              // 8 octets
+unsigned long long     // 8 octets
+
+long                   // 8 octets
+unsigned long          // 8 octets
+size_t                 // 8 octets
+ssize_t                // 8 octets
+void *                 // 8 octets
+char *                 // 8 octets
+int *                  // 8 octets
+(any pointer)          // 8 octets
+
+int                    // 4 octets
+unsigned int           // 4 octets
+float                  // 4 octets
+
+short                  // 2 octets
+unsigned short         // 2 octets
+
+char                   // 1 octet
+unsigned char          // 1 octet
+_Bool                  // 1 octet
+
+Les tailles et alignements dépendent de l’ABI.
+Cette liste correspond à une architecture
+64 bits (x86_64, Linux, norme 42).
+
+L’alignement d’un type est ≤ à sa taille.
+Le padding est ajouté pour respecter
+cet alignement dans les structs.

@@ -1,0 +1,101 @@
+Cours — Partitions de disque (primaire, étendue, logique)
+
+Qu’est-ce qu’une partition de disque ?
+Une partition de disque est une portion logique d’un disque physique.
+Un même disque dur peut être découpé en plusieurs partitions, chacune pouvant :
+contenir un système de fichiers
+être montée indépendamment
+être gérée séparément (sauvegarde, formatage, permissions…)
+Pourquoi partitionner un disque ?
+Organiser les données (ex : /, /home, /var)
+Limiter les dégâts : si une partition est corrompue, les autres restent intactes
+Séparer système et données
+Faciliter la maintenance et la sécurité
+
+Les types de partitions
+Il existe trois types de partitions (dans le schéma MBR) :
+- partition primaire
+- partition étendue
+- partition logique
+Important : ce sont des concepts de partitionnement, pas de systèmes de fichiers.
+
+Partition primaire
+Définition
+Une partition primaire est une partition :
+directement décrite dans la table de partitions
+capable de contenir un système de fichiers
+capable de contenir un système d’exploitation
+Limitation (MBR)
+Avec un disque utilisant MBR (Master Boot Record) :
+maximum 4 partitions primaires
+parmi elles, une seule peut être active (bootable)
+La partition active est celle depuis laquelle le système démarre
+En pratique : la partition qui contient l’OS utilisé
+À retenir
+MBR → max 4 partitions primaires
+1 partition primaire active → OS
+
+Partition étendue
+Pourquoi elle existe ?
+La partition étendue existe pour contourner la limite des 4 partitions primaires du MBR.
+Définition
+Une partition étendue :
+ne contient PAS directement de données
+ne contient PAS de système de fichiers
+sert de conteneur pour des partitions logiques
+On peut voir la partition étendue comme une boîte.
+Contraintes
+Une seule partition étendue par disque
+Elle compte comme 1 des 4 partitions primaires
+
+Partition logique
+Définition
+Une partition logique :
+est créée à l’intérieur d’une partition étendue
+contient un système de fichiers
+sert réellement à stocker des données ou être montée
+Avantage
+nombre quasi illimité de partitions logiques
+permet de découper finement le disque
+Ce sont les partitions logiques qui sont utilisées au quotidien (/home, /var, etc.)
+
+Schéma mental simple
+Disque
+├── Partition primaire (OS)
+├── Partition primaire
+├── Partition primaire
+└── Partition étendue
+    ├── Partition logique
+    ├── Partition logique
+    ├── Partition logique
+    └── ...
+
+Taille de cluster (ou bloc)
+Définition
+La taille de cluster (ou bloc) est :
+le plus petit espace que le système de fichiers peut allouer à un fichier
+Exemple
+Taille de cluster : 64 Ko
+Fichier texte : 1 mot
+Le fichier occupe quand même 64 Ko
+Problèmes possibles
+Clusters trop grands → gaspillage d’espace
+Clusters trop petits → plus de fragments → performances moindres
+Il faut un compromis entre performance et efficacité.
+À noter :
+La taille de cluster dépend du système de fichiers (ext4, xfs…), pas du type de partition.
+
+MBR vs GPT
+MBR (ancien)
+Max 4 partitions primaires
+Taille max disque : ~2 To
+Nécessite partition étendue + logique
+GPT (moderne)
+Jusqu’à 128 partitions
+Pas besoin de partition étendue
+Plus robuste
+Utilisé avec UEFI
+
+Born2BeRoot peut utiliser MBR ou GPT, mais :
+le cours classique explique souvent MBR
+GPT simplifie beaucoup les choses

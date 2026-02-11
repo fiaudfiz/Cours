@@ -1,0 +1,28 @@
+AppArmor vs SELinux
+
+1. Définition du contrôle d'accès obligatoire (MAC)
+    Par défaut, Linux utilise le contrôle d'accès discrétionnaire (DAC), où le propriétaire d'un fichier décide des permissions. AppArmor et SELinux ajoutent une couche supplémentaire appelée MAC (Mandatory Access Control). 
+    Même si un utilisateur (ou un pirate) obtient les droits "root", ces outils peuvent bloquer ses actions s'ils ne sont pas explicitement autorisés par une politique de sécurité.
+
+2. AppArmor : La simplicité par le chemin
+    AppArmor est le système de sécurité utilisé par défaut sur Debian.
+    Fonctionnement : Il se base sur les chemins de fichiers (path-based). On crée des profils pour chaque application. Par exemple, on dit au service SSH qu'il a le droit de lire le fichier /etc/ssh/sshd_config, mais rien d'autre.
+    Avantages : Il est beaucoup plus simple à apprendre et à administrer. Les profils sont écrits en texte clair et sont faciles à lire pour un humain.
+    Inconvénients : Si un fichier est déplacé ou renommé, le profil ne le reconnaît plus et peut bloquer l'application par erreur.
+
+3. SELinux : La puissance par l'étiquette
+    SELinux (Security-Enhanced Linux) est le système utilisé par défaut sur Rocky Linux (et Red Hat).
+    Fonctionnement : Il se base sur des étiquettes de sécurité (labels ou contextes). Chaque fichier, processus et utilisateur possède une étiquette. La sécurité ne dépend pas de "l'endroit" où se trouve le fichier, mais de "ce qu'il est".
+    Avantages : Il est extrêmement puissant et granulaire. C'est l'un des systèmes de sécurité les plus robustes au monde.
+    Inconvénients : Sa courbe d'apprentissage est très raide. La configuration est complexe et peut rapidement devenir un casse-tête pour un administrateur non-expert.
+
+4. Différences majeures
+    Approche : AppArmor regarde "où" est le fichier, SELinux regarde "quelle étiquette" a le fichier.
+    Facilité : AppArmor est considéré comme "user-friendly", SELinux est considéré comme complexe.
+    Installation : Sous Debian, AppArmor est déjà intégré et activé, ce qui renforce la sécurité du serveur dès le premier démarrage.
+
+5. Résumé
+    AppArmor et SELinux empêchent un attaquant de compromettre tout le système, même s'il prend le contrôle d'un service.
+    AppArmor est le choix logique sur Debian pour sa stabilité et sa facilité de gestion.
+    SELinux offre une sécurité plus fine mais nécessite une gestion beaucoup plus lourde.
+    Pour vérifier le statut sur notre VM, on utilise la commande : aa-status.

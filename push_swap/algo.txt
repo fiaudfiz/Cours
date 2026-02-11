@@ -1,0 +1,181 @@
+On dispose du set d'instruction suivantes:
+
+    sa = echanger les 2 premiers elements de A
+    sb = echanger les 2 premiers elements de B
+    ss = sa + sb
+    pa = envoie a A
+    pb = envoie a B
+    ra = premier devient dernier dans A
+    rb = premier devient dernier dans B
+    rr = ra + rb
+    rra = dernier devient premier dans A
+    rrb = dernier devient premier dans B
+    rrr = rra + rrb
+
+    en premier on regarde si la liste A est remplie
+    on peut la parcourir peut etre pour verifier qu'il n'y ai pas de doublons ou que elle soit deja en ordre croissant
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ex 3
+
+   1
+   45
+   5
+   88
+   2
+   43
+   77
+   7
+   11
+   24
+   4
+
+   pb pb 
+
+   5    45
+   88   1
+   2
+   43
+   77
+   7
+   11
+   24
+   4
+
+   pb sb
+
+   88   45
+   2    5
+   43   1
+   77
+   7
+   11
+   24
+   4
+
+    pb
+
+   2    88
+   43   45
+   77   5
+   7    1
+   11
+   24
+   4
+
+   pb
+
+   43   2
+   77   88
+   7    45
+   11   5
+   24   1
+   4
+
+    sb sb sb
+
+    43  88
+    77  45
+    7   5
+    11  2
+    24  1
+    4
+
+    pb sb sb 
+
+    77  88
+    7   45
+    11  43
+    24  5
+    4   2
+        1
+
+    pb sb
+    7   88
+    11  77
+    24  45
+    4   43
+        5
+        2
+        1
+
+    pb sb sb sb sb
+
+    11  88 
+    24  77
+    4   45
+        43
+        7
+        5
+        2
+        1
+    
+    rra 
+
+    4   88
+    11  77
+    24  45
+        43
+        7
+        5
+        2
+        1
+
+    pa pa pa pa
+
+    43  7
+    45  5
+    77  2
+    88  1
+    4
+    11
+    24
+
+    rra rra 
+
+    11  7
+    24  5
+    43  2
+    45  1
+    77
+    88
+    4
+    
+    pa pa rra 
+
+    4   2
+    5   1
+    7
+    11
+    24
+    43
+    45
+    77
+    88
+
+    pa pa 
+
+    1
+    2
+    4
+    5
+    7
+    11
+    24
+    43
+    45
+    77
+    88

@@ -1,0 +1,88 @@
+Cours — Utilisateurs et groupes sous Linux
+
+1. Gestion des utilisateurs et des groupes
+Linux est un système multi-utilisateur.
+Il permet d’ajouter, modifier et supprimer des utilisateurs et des groupes facilement via la ligne de commande.
+Chaque utilisateur et chaque groupe possède :
+une identité unique
+des droits spécifiques
+des permissions sur les fichiers et les services
+
+2. Stockage des informations utilisateurs
+Linux stocke les informations liées aux utilisateurs et aux groupes dans plusieurs fichiers de configuration situés dans le répertoire :
+/etc
+Ces fichiers sont essentiels au fonctionnement du système.
+
+3. Les fichiers de configuration principaux
+/etc/passwd
+Ce fichier contient la liste des utilisateurs du système.
+Pour chaque utilisateur, on y trouve notamment :
+le nom d’utilisateur
+l’UID (User ID)
+le GID principal
+le répertoire personnel (home directory)
+le shell par défaut
+L’UID est un identifiant numérique unique attribué à chaque utilisateur.
+Linux se base sur l’UID, et non sur le nom, pour gérer les droits.
+/etc/group
+Ce fichier contient la liste des groupes du système.
+Pour chaque groupe, il indique :
+le nom du groupe
+le GID (Group ID)
+les utilisateurs membres du groupe
+/etc/shadow
+Ce fichier contient les mots de passe chiffrés des utilisateurs.
+Caractéristiques :
+accessible uniquement par le super-utilisateur
+contient aussi :
+la date du dernier changement de mot de passe
+les règles d’expiration
+La séparation entre /etc/passwd et /etc/shadow améliore la sécurité.
+/etc/gshadow
+Ce fichier contient les informations sensibles liées aux groupes, notamment :
+les mots de passe des groupes
+les administrateurs de groupes
+
+4. Commandes de gestion des utilisateurs
+Ajouter un utilisateur
+adduser ou useradd
+→ création d’un nouvel utilisateur
+Supprimer un utilisateur
+deluser ou userdel
+→ suppression d’un utilisateur du système
+Modifier un utilisateur
+usermod
+→ modifie les paramètres d’un compte utilisateur
+(groupes, shell, répertoire personnel, UID, etc.)
+
+5. Commandes de gestion des groupes
+Modifier un groupe
+groupmod
+→ permet de modifier les paramètres d’un groupe utilisateur
+
+6. Gestion des mots de passe
+Changer un mot de passe
+passwd
+→ permet de modifier le mot de passe d’un utilisateur Linux
+Cette commande met à jour les informations stockées dans /etc/shadow.
+
+7. Fichier de configuration adduser
+Le fichier :
+/etc/adduser.conf
+contient les valeurs par défaut utilisées par :
+adduser
+addgroup
+deluser
+delgroup
+Il définit notamment :
+le chemin par défaut du répertoire personnel
+les permissions
+les groupes par défaut
+
+8. Résumé
+Linux gère utilisateurs et groupes via des fichiers dans /etc
+/etc/passwd : informations générales des utilisateurs
+/etc/group : informations des groupes
+/etc/shadow : mots de passe utilisateurs
+/etc/gshadow : mots de passe et administration des groupes
+les commandes permettent une gestion complète en ligne de commande

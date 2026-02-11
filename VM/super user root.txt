@@ -1,0 +1,48 @@
+Cours — Super‑utilisateur et sudo sous Linux
+
+1. Le super‑utilisateur
+Sous Linux, le super‑utilisateur est le compte appelé root.
+Caractéristiques de root :
+possède tous les droits sur la machine
+peut lire, modifier et supprimer n’importe quel fichier
+peut gérer les utilisateurs et les groupes
+peut installer ou supprimer des logiciels
+peut modifier le noyau et les services
+son UID (User ID) est 0
+UID = 0 → super‑utilisateur
+UID ≠ 0 → utilisateur classique
+Travailler directement en tant que root est dangereux car toute erreur peut :
+supprimer des fichiers système
+empêcher le démarrage du système
+compromettre la sécurité
+Principe fondamental :
+Ne travailler qu’avec les privilèges nécessaires.
+
+2. La commande sudo
+La commande sudo permet d’exécuter une commande avec les droits du super‑utilisateur.
+Fonctionnement :
+l’utilisateur saisit son propre mot de passe
+le système vérifie s’il est autorisé à utiliser sudo
+la commande s’exécute avec les privilèges de root
+Ce mécanisme est appelé élévation temporaire de privilèges.
+
+3. Le groupe sudo
+Tous les utilisateurs n’ont pas le droit d’utiliser sudo.
+Pour pouvoir utiliser sudo, l’utilisateur doit appartenir au groupe sudo.
+Pour vérifier les groupes d’un utilisateur :
+utiliser la commande id
+elle affiche l’UID et les groupes de l’utilisateur
+
+4. sudo -i : ouvrir une session root
+La commande sudo -i ouvre un terminal interactif en tant que root.
+équivalent à se connecter directement sur le compte root
+à utiliser avec précaution : toutes les commandes exécutées sont en root
+Bonne pratique :
+utiliser sudo commande par commande
+éviter de rester en session root trop longtemps
+
+5. Résumé
+root = super‑utilisateur, UID = 0, tous les droits sur le système
+sudo = élévation temporaire des privilèges
+accès sudo réservé aux membres du groupe sudo
+travailler en root directement est dangereux et doit être limité

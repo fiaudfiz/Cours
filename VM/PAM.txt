@@ -1,0 +1,96 @@
+Cours — Politique des mots de passe sous Linux (PAM)
+
+1. Politique de mot de passe
+Une politique de mot de passe robuste regroupe l’ensemble des règles qui permettent de garantir la sécurité des comptes utilisateurs sur un système.
+Elle couvre deux aspects principaux :
+
+Structure du mot de passe
+longueur minimale
+types de caractères autorisés ou exigés
+interdiction de mots de passe trop simples ou prévisibles
+
+Cycle de vie du mot de passe
+fréquence de renouvellement
+durée de validité
+historique des anciens mots de passe
+conditions de changement
+Une mauvaise politique de mots de passe représente une faille de sécurité majeure.
+
+2. PAM (Pluggable Authentication Modules)
+PAM est un système modulaire utilisé par Linux pour gérer :
+l’authentification des utilisateurs
+la gestion des mots de passe
+l’autorisation d’accès aux services
+Grâce à PAM, les règles de sécurité sont centralisées et appliquées de manière cohérente à l’ensemble du système.
+
+3. Le module pam_pwquality
+Le module pam_pwquality permet de :
+définir les règles de construction des mots de passe
+contrôler leur complexité lors de la création ou du changement
+Il agit uniquement sur la qualité du mot de passe, pas sur son stockage.
+
+4. Répertoire de configuration PAM
+Les fichiers de configuration PAM se trouvent dans :
+/etc/pam.d/
+Chaque service possède son propre fichier.
+Sous Debian, le fichier principal pour la politique de mots de passe est :
+/etc/pam.d/common-password
+Ce fichier définit les règles appliquées lors de :
+la création d’un mot de passe
+la modification d’un mot de passe existant
+
+5. Exemple de règle PAM avec pwquality
+password requisite pam_pwquality.so retry=3 minlen=12 difok=3
+Signification des options :
+retry=3
+autorise 3 tentatives en cas de mot de passe non conforme
+minlen=12
+impose une longueur minimale de 12 caractères
+difok=3
+impose au moins 3 caractères différents entre l’ancien et le nouveau mot de passe
+
+6. Exigences de complexité (credit)
+ucredit=-1 lcredit=-1 dcredit=-1 ocredit=-1
+Détail :
+ucredit=-1 : exige au moins une lettre majuscule
+lcredit=-1 : exige au moins une lettre minuscule
+dcredit=-1 : exige au moins un chiffre
+ocredit=-1 : exige au moins un caractère spécial
+Ces options garantissent un mot de passe complexe et difficile à deviner.
+
+7. Critères d’un mot de passe fort
+Un mot de passe sécurisé doit :
+contenir au moins 12 à 14 caractères
+
+ne pas contenir :
+le login
+le nom réel
+le nom de l’entreprise
+toute information personnelle
+
+contenir :
+des lettres minuscules
+des lettres majuscules
+des chiffres
+des caractères spéciaux
+
+8. Blacklist de mots de passe
+Il est possible d’interdire explicitement certains mots de passe courants.
+Principe
+une liste noire contient des mots de passe faibles ou interdits
+pam_pwquality peut refuser un mot de passe présent dans cette liste
+Exemples de mots à interdire :
+mots de passe communs (password, 123456, admin)
+variations évidentes
+noms liés à l’utilisateur ou au système
+Cette approche renforce la sécurité face aux attaques par dictionnaire.
+
+9. Résumé
+PAM gère l’authentification et les mots de passe sous Linux
+pam_pwquality contrôle la qualité des mots de passe
+les règles sont définies dans /etc/pam.d/common-password
+une bonne politique combine :
+longueur
+complexité
+renouvellement
+interdictions ciblées

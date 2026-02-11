@@ -1,0 +1,38 @@
+1. C'est quoi un algorithme de tri ?
+
+    C'est une recette logique qui prend une liste de données en désordre (nombres, noms, dates) et les réorganise selon une règle précise (du plus petit au plus grand, par ordre alphabétique, etc.).
+    À quoi ça sert ?
+    Recherche rapide : Trouver un nom dans un dictionnaire est instantané parce qu'il est trié. Sur ordinateur, on utilise la recherche dichotomique (couper en deux) qui ne marche que sur une liste triée.
+    Lisibilité : Afficher les prix les moins chers sur un site e-commerce.
+    Optimisation : Beaucoup d'autres algorithmes complexes ont besoin que les données soient triées pour fonctionner efficacement.
+
+2. Comment on les compare ?
+
+    On ne regarde pas si l'algorithme est "joli", on regarde sa performance :
+    Vitesse (Complexité temporelle) : Combien d'opérations il fait pour n éléments. On note ça avec le symbole O (ex: O(n2)).
+    Mémoire (Complexité spatiale) : Est-ce qu'il a besoin de créer une copie de la liste pour travailler ou est-ce qu'il trie directement "sur place" ?
+    Stabilité : Si deux objets ont la même valeur, est-ce qu'ils gardent leur ordre d'origine après le tri ?
+
+3. Trois exemples de fonctionnement
+
+    A. Le Tri par Sélection (L'intuitif)
+
+        C'est la méthode que beaucoup utilisent pour trier un jeu de cartes dans leur main.
+        Tu cherches le plus petit nombre de toute la liste.
+        Tu le mets au tout début.
+        Tu cherches le plus petit parmi ceux qui restent, et tu le mets en deuxième position.
+        Tu recommences jusqu'à la fin.
+
+    B. Le Tri par Insertion (Le pratique)
+
+        Imagine que tu reçois des cartes une par une.
+        Tu prends la nouvelle carte.
+        Tu la compares avec celles que tu as déjà en main (en partant de la droite).
+        Tu l'insères dès que tu trouves sa place. C'est très rapide si la liste est déjà presque triée.
+
+    C. Le Tri Fusion (Le mathématique)
+
+        Il utilise la stratégie "Diviser pour Régner".
+        Tu coupes ta liste en deux, puis encore en deux, jusqu'à n'avoir que des chiffres isolés.
+        Tu compares les chiffres deux par deux et tu les rassembles en petits groupes triés.
+        Tu fusionnes les petits groupes pour en faire des plus grands, toujours en les rangeant. C'est l'un des plus rapides pour les très grandes listes.

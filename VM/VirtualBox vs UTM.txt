@@ -1,0 +1,34 @@
+VirtualBox vs UTM
+
+1. Définition de la virtualisation
+    La virtualisation est une technologie qui permet de créer des ressources informatiques virtuelles (processeur, RAM, disque dur) à partir d'une seule machine physique. 
+    Dans le cadre de ce projet, nous utilisons un hyperviseur de type 2, c'est-à-dire un logiciel qui s'installe sur un système d'exploitation déjà existant (Windows, macOS ou Linux) pour faire tourner notre serveur Debian.
+
+2. VirtualBox : La solution universelle
+    VirtualBox est un logiciel de virtualisation libre et gratuit développé par Oracle. C'est l'outil standard utilisé sur les postes de l'école 42.
+    Fonctionnement : Il crée un environnement matériel simulé très complet. Il est particulièrement performant sur les architectures x86 (processeurs Intel et AMD).
+    Avantages : Il possède une interface graphique très complète et permet une gestion avancée du réseau (NAT, Redirection de ports). Il est extrêmement stable et utilisé partout dans le monde.
+    Inconvénients : Sur les nouveaux ordinateurs équipés de puces ARM (comme les Mac M1/M2/M3), il est beaucoup moins performant car il doit simuler une architecture différente.
+
+3. UTM : L'alternative pour les nouveaux Mac
+    UTM est un logiciel de virtualisation basé sur QEMU, principalement conçu pour l'écosystème Apple Silicon.
+    Fonctionnement : Il utilise les capacités de virtualisation native d'Apple. Contrairement à VirtualBox, il peut faire de l'émulation, ce qui permet de faire tourner des systèmes conçus pour Intel sur un processeur Apple M1.
+    Avantages : Il est très léger et offre des performances impressionnantes sur les Mac récents. Son interface est moderne et parfaitement intégrée à macOS.
+    Inconvénients : La gestion du réseau et du partage de fichiers est souvent moins intuitive que sur VirtualBox. Il est également moins répandu dans le monde de l'administration système professionnelle.
+
+4. Comparaison technique
+    Compatibilité : VirtualBox est multiplateforme (Windows, Linux, Mac Intel), tandis qu'UTM est exclusif à macOS et iOS.
+    Réseau : VirtualBox propose un menu dédié très simple pour la "Redirection de ports" (Port Forwarding), ce qui est crucial pour notre accès SSH sur le port 4242.
+    Ressources : UTM consomme généralement moins de batterie et de processeur sur les ordinateurs portables Apple.
+
+5. Utilisation dans notre projet
+    Pour Born2beRoot, nous avons privilégié VirtualBox car :
+    C'est l'outil de référence de l'école, garantissant que la VM fonctionnera sur le poste de soutenance (Lenovo).
+    Il permet de configurer facilement le réseau NAT pour isoler notre VM tout en y accédant via le port 4242 du PC hôte.
+    Il offre des outils comme les "Guest Additions" pour faciliter les interactions entre la VM et le clavier/souris.
+
+6. Résumé
+    VirtualBox et UTM permettent de faire tourner un serveur Linux sans avoir à formater son ordinateur.
+    VirtualBox est le choix de la stabilité et de l'universalité (idéal pour les postes de 42).
+    UTM est le choix de la performance pour les utilisateurs de puces Apple Silicon.
+    Pour la soutenance, VirtualBox reste l'outil indispensable pour garantir la compatibilité des ports réseau.

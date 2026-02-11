@@ -1,0 +1,74 @@
+Module 2 : L'Exécution – De la Syntaxe au Signal
+
+Dans le Module 1, nous avons vu la machine (Hardware). Ici, nous voyons comment ton code (Software) prend le contrôle de la machine.
+
+1. La Pierre de Rosette : ISA (Instruction Set Architecture)
+
+	C'est le concept fondamental pour comprendre la portabilité (ou non) de ton code. Le CPU a un vocabulaire limité et "câblé" dans ses circuits : c'est son Jeu d'Instructions (ISA).
+    Le C (Haut niveau) : a = b + c;
+    Abstrait : Tu décris l'intention. C'est portable (tu peux le compiler pour n'importe quelle machine).
+    L'Assembleur (Bas niveau - ISA) : ADD R1, R2, R3
+        Concret : Correspond 1 pour 1 à ce que le CPU sait faire. C'est spécifique à la machine.
+    Le Code Machine (Binaire) : 01001011 ...
+        Physique : Ce sont les tensions électriques que le CPU "mange" vraiment.
+    Note pour le Dev : C'est le rôle du compilateur (gcc) de traduire ton C portable en ISA spécifique (x86 pour ton PC, ARM pour ton téléphone). Si tu copies un fichier .exe (binaire x86) sur un Raspberry Pi (ARM), ça ne marche pas : ils ne parlent pas la même langue.
+
+2. Le Chef de Chantier : Le Registre PC
+
+	Parmi les registres du CPU, l'un d'eux est le maître absolu du temps :
+    Nom : PC (Program Counter) ou RIP (Instruction Pointer) sur les systèmes Intel 64 bits.
+    Rôle : Il contient l'adresse mémoire de la prochaine instruction à exécuter.
+    En cas de Crash (Segfault) : Si ton programme plante avec une "Segmentation Fault", c'est souvent parce que le PC a essayé de lire une instruction à une adresse interdite (ex: pointeur nul). Le debugger te donnera la valeur du PC/RIP au moment de la mort pour te dire exactement où le code a cassé.
+
+3. Le Cycle de la Vie (Fetch - Decode - Execute)
+
+	Pour exécuter une seule instruction, le processeur répète inlassablement cette boucle à trois temps.
+	
+	Étape 1 : Fetch (Rechercher)
+
+    	Le CPU regarde le registre PC (ex: adresse 0x1004).
+    	Il envoie cette adresse sur le Bus vers la RAM (ou le Cache).
+    	La RAM renvoie le contenu (l'instruction binaire).
+    	Important : Le CPU stocke cette instruction dans un registre temporaire appelé IR (Instruction Register).
+    	Le CPU incrémente le PC (PC←PC+taille instruction) pour pointer vers la suite.
+
+	Étape 2 : Decode (Comprendre)
+
+		L'Unité de Contrôle lit les bits dans l'IR.
+    	Elle "reconnaît" le motif (Opcode). Exemple : "C'est une addition".
+    	Elle identifie les données nécessaires. Exemple : "Je dois utiliser le Registre A et le Registre B".
+
+	Étape 3 : Execute (Agir)
+
+		C'est le moment de vérité.
+    	Les vannes s'ouvrent, les données filent vers l'UAL.
+    	L'UAL effectue le calcul.
+    	Le résultat est écrit dans le registre de destination.
+    	Mise à jour des Flags (voir ci-dessous).
+
+4. La Logique : Comment fonctionnent les if et while ?
+
+	Le cycle ci-dessus est linéaire. Pour faire des conditions, il faut pouvoir "briser" la ligne. C'est là qu'interviennent les Sauts (Jumps) et les Drapeaux (Flags).
+	Les Drapeaux (Flags)
+
+	L'UAL ne fait pas que calculer, elle rapporte l'état du résultat dans un registre spécial (EFLAGS).
+    Zero Flag (ZF) : Le résultat est-il égal à 0 ?
+    Sign Flag (SF) : Le résultat est-il négatif ?
+
+	L'Exemple Concret
+
+	Ton code C :
+		if (a == 0) {
+    		goto error;
+		}
+		b = 10;
+
+	Ce que le CPU exécute (Assembleur simplifié)
+    CMP R1, 0 (Compare R1 avec 0)
+        Action Hardware : L'UAL fait une soustraction fictive (R1−0). Si le résultat est 0, elle allume le Zero Flag (ZF=1).
+    JE 0x500 (Jump if Equal)
+        Action Hardware : Le CPU regarde le Zero Flag.
+        SI ZF est allumé (1) : Le CPU écrase la valeur du registre PC avec l'adresse 0x500. Au prochain cycle, il ira chercher l'instruction là-bas.
+        SINON : Il ne fait rien et continue tout droit.
+    MOV R2, 10
+        Cette ligne est exécutée seulement si le saut n'a pas eu lieu.

@@ -1,0 +1,137 @@
+Cours — LVM (Logical Volume Management)
+
+Définition de LVM
+LVM (Logical Volume Management) est :
+une méthode et un ensemble d’outils logiciels permettant de gérer de manière souple, dynamique et sécurisée l’espace de stockage sous les systèmes UNIX/Linux.
+LVM est un gestionnaire de volumes, pas un système de fichiers.
+Objectifs de LVM
+gérer l’espace disque sans dépendre du découpage physique
+agrandir / réduire des volumes sans réinstaller
+améliorer la disponibilité et la sécurité
+faciliter les sauvegardes
+
+Principe fondamental (idée clé)
+LVM introduit une couche d’abstraction entre :
+le matériel (disques)
+et l’utilisation réelle (partitions, systèmes de fichiers)
+On ne travaille plus directement avec les disques, mais avec des volumes logiques.
+
+Volumes Physiques (PV — Physical Volumes)
+Définition
+Un volume physique (PV) est un support de stockage réel utilisé par LVM.
+Peuvent être des PV :
+un disque dur entier
+une partition de disque
+un volume RAID
+une unité logique issue d’un SAN
+
+Définitions associées
+RAID : technique combinant plusieurs disques pour la performance et/ou la redondance
+SAN (Storage Area Network) : réseau dédié fournissant du stockage distant vu comme local par le système
+LVM ne crée pas le stockage, il l’exploite.
+
+Groupes de Volumes (VG — Volume Groups)
+Définition
+Un groupe de volumes (VG) est :
+un ensemble de volumes physiques (PV) regroupés pour former un pool de stockage unique
+On peut voir un VG comme un pseudo disque dur géant.
+Rôle
+centraliser l’espace disponible
+servir de réservoir pour créer des volumes logiques
+
+Volumes Logiques (LV — Logical Volumes)
+Définition
+Un volume logique (LV) est :
+découpé à l’intérieur d’un VG
+formaté avec un système de fichiers
+monté pour être utilisé
+Un LV est l’équivalent d’une partition classique, mais flexible.
+
+À retenir
+Disque → PV → VG → LV → système de fichiers
+
+Stripes et Mirrors
+Les volumes logiques peuvent être configurés pour la performance ou la sécurité.
+
+Striped volumes
+données réparties sur plusieurs PV
+similaire à RAID 0
+très performant
+aucune redondance
+
+Mirrored volumes
+données dupliquées sur plusieurs PV
+similaire à RAID 1
+protection contre la panne d’un disque
+consomme plus d’espace
+
+Extensions (Extents)
+Définition
+Les extents sont les plus petites unités d’allocation utilisées par LVM.
+Toute la gestion LVM repose sur elles.
+Types d’extents
+PE (Physical Extents) : sur les volumes physiques
+LE (Logical Extents) : sur les volumes logiques
+Important :
+tous les PE d’un même VG ont la même taille
+un LV est composé d’un certain nombre de LE
+les extents non utilisés permettent d’agrandir un LV dynamiquement
+
+Snapshots LVM
+Définition
+Un snapshot LVM est :
+un volume logique spécial qui capture l’état d’un autre volume logique à un instant donné.
+Ce n’est PAS une copie complète.
+Comment ça fonctionne (explication simple)
+On crée un snapshot du LV cible
+À partir de ce moment :
+les données existantes ne sont pas copiées
+seules les modifications futures sont enregistrées dans le snapshot
+Le snapshot utilise un mécanisme copy-on-write
+Tant qu’aucune donnée ne change → le snapshot consomme presque rien
+Plus il y a d’écritures → plus le snapshot grossit
+À quoi servent les snapshots ?
+sauvegarde cohérente d’un système en fonctionnement
+test avant une mise à jour
+rollback rapide
+
+Limites des snapshots
+ce ne sont pas des sauvegardes complètes
+ils dépendent du volume original
+si l’espace du snapshot est plein → snapshot invalide
+ils disparaissent au redémarrage s’ils ne sont pas persistants
+
+Taille d’un snapshot (explication claire)
+La taille d’un snapshot dépend :
+du volume de données modifiées
+du nombre d’écritures par seconde
+de la durée de vie du snapshot
+Ce n’est PAS un pourcentage fixe.
+
+Exemple mental
+Si tu modifies 2 Go de données → snapshot ≥ 2 Go
+Si tu effaces tout le volume → snapshot ≈ taille du LV
+Plus le système écrit vite, plus le snapshot se remplit rapidement.
+Thin-provisioned snapshots
+espace alloué dynamiquement
+plus flexible
+nécessite une surveillance stricte
+
+Ce que LVM ne fait PAS
+LVM :
+ne gère pas les systèmes de fichiers
+ne remplace pas le partitionnement
+ne gère pas les permissions
+Relation correcte :
+Partition → PV
+LV → système de fichiers → montage
+
+Résumé ultra-synthèse
+LVM = couche d’abstraction du stockage
+
+PV = stockage physique
+VG = pool de stockage
+LV = pseudo partition
+
+Extents = unités de base
+Snapshots = état figé + copy-on-write

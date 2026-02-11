@@ -1,0 +1,58 @@
+Cours — Journaux système et rsyslog
+1. Activité passée du système
+Sous Linux, toute l’activité passée du système est enregistrée sous forme de fichiers de traces, aussi appelés logs.
+Ces fichiers permettent de :
+analyser le comportement du système
+diagnostiquer des erreurs
+surveiller la sécurité
+retracer les actions des utilisateurs et des services
+
+2. Le répertoire /var et les logs
+Le répertoire /var contient les données variables du système, c’est-à-dire les données susceptibles d’évoluer fréquemment pendant le fonctionnement.
+Parmi ces données, on trouve les fichiers de logs, stockés dans le sous-répertoire :
+/var/log
+Chaque logiciel ou service peut y écrire ses propres fichiers de traces.
+
+3. Rsyslog : gestionnaire de journaux
+Définition
+rsyslog est un service chargé de :
+collecter les messages du système et des applications
+les trier
+les enregistrer dans les fichiers de logs appropriés
+Il intercepte l’activité du système et la redirige vers les bons fichiers.
+
+4. Avantages de rsyslog
+rsyslog permet :
+de centraliser la configuration des fichiers de logs
+de regrouper les messages par nature (authentification, système, réseau, etc.)
+d’envoyer les logs sur le réseau
+utile pour centraliser les logs d’un parc de machines sur un serveur dédié
+de gérer la rotation automatique des fichiers de logs
+d’utiliser des formats de date précis
+
+5. Fichier de configuration de rsyslog
+rsyslog est configuré principalement via le fichier :
+/etc/rsyslog.conf
+Ce fichier définit :
+quelles informations sont collectées
+où elles sont stockées
+si elles sont envoyées localement ou à distance
+
+6. Le fichier /var/log/auth.log (Debian)
+Sous Debian et distributions basées sur Debian, le fichier :
+/var/log/auth.log
+contient toutes les informations liées à l’authentification et à la sécurité.
+On y trouve notamment :
+les connexions aux terminaux physiques de la machine
+les connexions via le serveur SSH
+les tentatives d’authentification
+les élévations de privilèges (sudo)
+les échecs et réussites d’accès
+Ce fichier est essentiel pour l’audit et la sécurité du système.
+
+7. Résumé
+les logs sont des fichiers de traces de l’activité du système
+ils sont stockés dans /var/log
+rsyslog collecte, trie et enregistre les logs
+rsyslog permet aussi la centralisation et la rotation des logs
+/var/log/auth.log contient les informations d’authentification et de privilèges

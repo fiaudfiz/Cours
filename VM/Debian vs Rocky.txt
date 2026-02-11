@@ -1,0 +1,28 @@
+Debian vs Rocky Linux
+
+1. Introduction aux distributions
+    Dans le cadre du projet Born2beRoot, le choix du système d'exploitation est une étape fondamentale. 
+    Les deux options principales sont Debian (basée sur la philosophie communautaire) et Rocky Linux (basée sur le monde de l'entreprise).
+
+2. Debian : La stabilité communautaire
+    Debian est l'une des distributions Linux les plus anciennes et les plus respectées. Elle est entièrement gérée par une communauté de bénévoles, sans entreprise mère.
+    Ses points forts : Elle est réputée pour sa stabilité légendaire et sa légèreté. Le système est très peu gourmand en ressources, ce qui est idéal pour une machine virtuelle. Elle utilise le gestionnaire de paquets apt et le format .deb.
+    Ses points faibles : En raison de ses tests de stabilité très longs, les versions des logiciels disponibles sont souvent plus anciennes que sur d'autres systèmes.
+
+3. Rocky Linux : L'héritage de l'entreprise
+    Rocky Linux est née suite à l'arrêt de CentOS. C'est un clone de RHEL (Red Hat Enterprise Linux).
+    Ses points forts : Elle est conçue pour les serveurs professionnels de grande envergure. Elle offre un cycle de maintenance très long et une compatibilité parfaite avec les logiciels certifiés pour Red Hat. Elle utilise dnf comme gestionnaire de paquets.
+    Ses points faibles : Elle est plus complexe à configurer pour un débutant et légèrement plus lourde que Debian pour des besoins basiques.
+
+4. Choix de conception pour le setup
+    Lors de l'installation de notre système (Debian), nous avons appliqué les choix suivants :
+    Partitionnement : Utilisation de LVM pour permettre de redimensionner les volumes sans réinstaller.
+    Sécurité : Mise en place de règles de mots de passe complexes et chiffrement des partitions.
+    Utilisateurs : Création d'un utilisateur non-privilégié et configuration stricte de sudo.
+    Services : Installation minimale avec uniquement le service SSH activé pour réduire la surface d'attaque.
+
+5. Résumé de la comparaison
+    Debian est un choix axé sur la liberté et la légèreté.
+    Rocky Linux est un choix axé sur les standards de l'industrie et les environnements pro.
+    Debian utilise apt alors que Rocky utilise dnf.
+    Le choix de Debian pour ce projet se justifie par sa simplicité de gestion et sa faible consommation de RAM sur les postes de l'école.

@@ -1,0 +1,14 @@
+mdp root : Admin#42#Security
+user miouali : miouali K7pM9qL2zac
+chiffrement disque : miouali42
+
+
+PAM faites
+log sudo fait
+installe vim
+ufw installe et configure
+miouali ajoute a user42 et a root
+
+ssh miouali@127.0.0.1 -p 4242
+
+sudo ufw status

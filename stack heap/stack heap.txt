@@ -1,0 +1,65 @@
+1. La Stack : Le domaine du CPU
+
+La Stack est une zone de mémoire de type "automatique". Elle est gérée directement par le processeur via un registre dédié : le Stack Pointer (souvent rsp sur architecture x86_64).
+Ce qu'un expert sait :
+
+    Le coût d'un appel de fonction : Chaque fois que tu appelles une fonction, le CPU effectue un "Push" sur la stack. Il y met les arguments, l'adresse de retour (où revenir après le return), et les variables locales. Si tu as une récursion infinie, la stack se remplit jusqu'à déborder : c'est le Stack Overflow.
+
+    La localité du cache : La Stack est petite et très souvent accédée. Résultat ? Elle reste presque toujours dans le Cache L1 du processeur. C'est pour ça qu'accéder à une variable locale est infiniment plus rapide qu'accéder à un malloc.
+
+    La durée de vie "Scope" : Dès que tu sors des accolades }, le Stack Pointer remonte. La donnée est techniquement toujours là, mais elle est considérée comme "morte". C'est pour ça qu'il ne faut jamais retourner l'adresse d'une variable locale.
+
+2. La Heap : Le domaine de l'OS
+
+La Heap est un espace géré par le noyau (Kernel). Quand tu fais un malloc, tu ne parles pas au CPU, tu parles à la librairie standard (C standard library) qui, si besoin, demande plus de mémoire à l'OS via l'appel système brk ou mmap.
+Les secrets de la Heap :
+
+    La fragmentation externe : Imagine que tu alloues 10 blocs de 10 octets. Tu libères les blocs pairs. Tu as 50 octets de libre, mais tu ne peux pas allouer un bloc de 20 octets car la mémoire libre n'est pas contiguë. Un bon développeur limite le nombre d'allocations/libérations frénétiques pour éviter ça.
+
+    L'overhead de malloc : Chaque bloc alloué sur la heap consomme plus de place que ce que tu as demandé. Pourquoi ? Parce que malloc doit stocker des méta-données (la taille du bloc, si le bloc suivant est libre, etc.) juste avant l'adresse qu'il te donne. Si tu malloc(1), tu consommes peut-être 16 ou 32 octets en réalité.
+
+3. Le "Hors-Programme" : La différence entre les bons et les cracks
+A. La gestion des Pages Mémoire
+
+Le CPU et l'OS ne voient pas la mémoire comme une suite d'octets, mais comme des Pages (généralement de 4 Ko).
+
+    Le concept : Quand tu accèdes à une adresse, le matériel (la MMU) traduit ton "adresse virtuelle" en "adresse physique".
+
+    Page Fault : Si tu accèdes à une zone de la heap que tu n'as pas encore utilisée, l'OS s'arrête, cherche une page physique, l'associe à ton programme, et repart. Un crack sait que faire un énorme memset sur un gros malloc d'un coup force toutes les pages à être créées (optimisation de latence).
+
+B. L'Alignement et le Padding (Data Alignment)
+
+Le processeur préfère lire les données par blocs de 4 ou 8 octets (selon l'architecture).
+C
+
+struct s_data {
+    char a;    // 1 octet
+    // 3 octets de "padding" invisibles ajoutés par le compilateur
+    int b;     // 4 octets
+};
+
+La structure fait 8 octets, pas 5. Si tu as 1 million de structures dans une liste chaînée, tu gâches 3 Mo de RAM. Un expert réorganise ses variables par taille décroissante pour minimiser le padding.
+C. Cache Miss et Linked Lists (Le tueur de performance)
+
+C'est le point le plus important pour un dev C.
+
+    Tableau : Les éléments sont collés. Le CPU anticipe et charge les éléments suivants dans le cache avant même que tu ne les demandes (Prefetching).
+
+    Liste Chaînée : Le nœud suivant peut être n'importe où. Le CPU doit s'arrêter, aller chercher en RAM (très lent), puis recommencer.
+
+    Solution de crack : Utiliser des "Block-linked lists". Au lieu d'avoir un nœud par élément, tu as un nœud qui contient un petit tableau de 16 éléments. Tu gagnes la rapidité d'insertion de la liste ET la rapidité de lecture du cache.
+
+4. Stratégie de développement (Mentalité 42)
+
+    Privilégie la Stack : Si la taille est connue et raisonnable (ex: un buffer de 4096 octets), utilise la stack. C'est "gratuit" en termes de performance.
+
+    Malloc intelligemment : Au lieu de faire 100 malloc pour 100 nœuds, fais un seul malloc(sizeof(node) * 100) et gère-les. C'est ce qu'on appelle un Arena Allocator. C'est ce qui rend des logiciels comme les moteurs de jeux ou les bases de données ultra-rapides.
+
+    Valgrind est ton meilleur ami, mais ton cerveau est premier : Valgrind te dit où ça fuite, mais il ne te dit pas si ton architecture est lente à cause d'une mauvaise utilisation du cache.
+
+Tableau récapitulatif du "Pro"
+Concept	Développeur Moyen	Expert (Niveau 42/Senior)
+Erreur mémoire	"J'ai un segfault, je cherche où."	"J'utilise gdb et j'analyse la stack frame."
+Malloc	"J'en fais partout, c'est dynamique."	"Je les évite dans les boucles critiques."
+Structures	"Je mets les variables au pif."	"J'aligne mes variables pour le CPU."
+Performance	"Le code est propre, c'est bon."	"Je minimise les cache misses."

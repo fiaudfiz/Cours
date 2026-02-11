@@ -1,0 +1,44 @@
+COURS 1 : Théorie des Fractales et Morphologie
+1. Définition et Concept Clé
+
+Une fractale est un objet géométrique qui possède une structure complexe à toutes les échelles. Contrairement à une figure géométrique classique (un cercle qui, si on zoome, finit par ressembler à une ligne droite), la fractale révèle toujours de nouveaux détails.
+
+    L'Autosimilarité : C'est le concept central. L'objet est composé de copies de lui-même à différentes échelles.
+
+    Définition récursive : Comme tu l'as noté, c'est une structure qui se répète. En programmation, cela se traduit souvent par une fonction qui s'appelle elle-même.
+
+    Dans la nature : Le chou romanesco, les flocons de neige, les réseaux de vaisseaux sanguins ou les côtes maritimes sont des exemples de fractales "naturelles" (limitées, car on ne peut pas zoomer à l'infini dans la matière).
+
+2. Origine et Étymologie
+
+    Benoît Mandelbrot (1975) : Mathématicien franco-américain qui a "découvert" que la géométrie euclidienne classique (lignes, carrés) était incapable de décrire la rugosité du monde réel.
+
+    Étymologie : Vient du latin fractus, qui signifie "brisé" ou "irrégulier". C'est l'opposé d'une courbe lisse.
+
+3. La Notion de Dimension Fractale
+
+C'est un point crucial de ton cours. En géométrie classique :
+
+    Un point = dimension 0.
+
+    Une ligne = dimension 1.
+
+    Un plan = dimension 2.
+
+Une fractale "remplit" l'espace de manière si complexe (par exemple une ligne qui zigzague tellement qu'elle occupe presque toute la surface) qu'on lui attribue une dimension non-entière. Par exemple, la côte de Bretagne a une dimension d'environ 1.25. Elle est plus qu'une ligne, mais moins qu'une surface.
+4. Introduction aux Ensembles (Aperçu)
+L'Ensemble de Mandelbrot
+
+C'est la fractale la plus célèbre. Dans ton code, elle servira de "carte de référence".
+
+    L'idée : On prend un nombre complexe c. On regarde si la suite zn+1​=zn2​+c reste "sage" (bornée) ou si elle explose vers l'infini.
+
+    Le visuel : Si la suite reste bornée, on colorie le point en noir. C'est ce qui forme le "bonhomme" caractéristique.
+
+L'Ensemble de Julia
+
+Les ensembles de Julia sont étroitement liés à Mandelbrot.
+
+    La différence : Pour Mandelbrot, on change c à chaque pixel. Pour Julia, on fixe un seul c pour toute l'image, et on change la valeur de départ z0​.
+
+    Le visuel : Selon la valeur de c choisie, on obtient des formes incroyablement variées (spirales, dentelles, nuages).

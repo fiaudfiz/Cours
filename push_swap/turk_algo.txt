@@ -1,0 +1,77 @@
+Le but ce cet algo est de trier une pile en ordre croissant a l'aide d'une autre pile.
+
+Tant que il reste plus que 3 elements dans A:
+	on pousse les 2 premiers dans B sans reflechir
+	Il faut que ceux ci soient decroissant dans B
+	pour chaque element de A on veut trouver sa cible :
+		soit le nombre va devenir le nouveau plus grand ou le nouveau plus petit
+		soit le nombre a des voisins logiques donc il faut pousser X vers le plus proche plus petit on doit donc faire rotate B pour arriver dans ce cas la
+		donc on transforme la pile pour acceuillir le nombre
+quand il reste 3 on les tries
+ensuite on renvoie B vers A
+	on renvoie dans B mais on cherche sa cible dans A donc on retourne la pile pour placer le nombre au dessus de son plus grand
+
+
+
+
+
+
+
+
+
+5
+54
+48
+4
+78
+1
+
+pb pb 
+
+48	54
+4	5
+78
+1
+
+rb pb 
+
+4	48
+78	5
+1	54
+
+rrb
+
+
+4	54	
+78	48
+1	5
+
+rra 
+
+1	54
+4	48
+78	5
+
+rra pa 
+
+54	48
+78	5
+1
+4
+
+pa pa
+
+5
+48
+78
+1
+4
+
+rra rra
+
+1
+4
+5
+48
+78
+1

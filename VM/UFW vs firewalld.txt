@@ -1,0 +1,35 @@
+UFW vs firewalld
+
+1. Rôle d'un pare-feu (Firewall)
+    Un pare-feu est un logiciel qui agit comme un filtre entre votre serveur et le réseau extérieur. 
+    Il permet d'autoriser ou de bloquer les connexions entrantes et sortantes en fonction de règles précises. 
+    Sous Linux, l'outil de base qui gère ces règles est iptables (ou nftables), mais il est complexe à utiliser directement. 
+    C'est pourquoi on utilise des interfaces simplifiées comme UFW ou firewalld.
+2. UFW : Uncomplicated Firewall
+    UFW est l'outil de gestion de pare-feu par défaut sur Debian et Ubuntu.
+    Philosophie : Comme son nom l'indique, il est conçu pour être "non compliqué". Son but est de rendre la gestion des ports accessible.
+    Fonctionnement : Il utilise une syntaxe très proche du langage naturel. Par exemple, pour ouvrir le port de notre serveur, on tape simplement : ufw allow 4242.
+    Avantages : Très léger, facile à apprendre et parfait pour sécuriser un serveur unique dont les règles ne changent pas tous les jours.
+
+3. firewalld : Le gestionnaire dynamique
+    firewalld est l'outil standard sur Rocky Linux, Fedora et Red Hat.
+    Philosophie : Il est conçu pour être dynamique. Contrairement à UFW, il permet de modifier les règles sans couper les connexions existantes.
+    Fonctionnement : Il utilise le concept de zones (public, work, trusted). On assigne une interface réseau à une zone, et chaque zone a ses propres règles de sécurité.
+    Avantages : Très puissant pour les machines qui changent souvent de réseau (comme un ordinateur portable) ou pour les serveurs avec de nombreuses interfaces réseau complexes.
+
+4. Comparaison des deux outils
+    Syntaxe : UFW est beaucoup plus simple à mémoriser que firewalld.
+    Flexibilité : firewalld est plus flexible car il gère les zones réseau, alors que UFW applique souvent ses règles de manière globale.
+    Usage : UFW est idéal pour les projets comme Born2beRoot car notre besoin est simple (ouvrir uniquement le port 4242).
+
+5. Utilisation dans notre projet
+    Dans notre configuration Debian, nous avons choisi UFW pour :
+    La simplicité : La commande ufw enable suffit pour activer la protection.
+    Le contrôle : Nous avons restreint les accès pour ne laisser passer que le protocole SSH sur le port 4242.
+    La vérification : La commande sudo ufw status permet de voir instantanément quelle porte est ouverte sur notre serveur.
+
+6. Résumé
+    UFW et firewalld sont des "surcouches" qui facilitent la configuration d'iptables.
+    UFW (Debian) mise sur la simplicité d'utilisation.
+    firewalld (Rocky) mise sur la gestion par zones et le dynamisme.
+    Pour notre serveur, UFW garantit une surface d'attaque minimale avec une configuration robuste.

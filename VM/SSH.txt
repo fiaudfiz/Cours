@@ -1,0 +1,95 @@
+Cours — SSH et configuration de /etc/ssh/sshd_config
+
+1. SSH : définition et rôle
+SSH (Secure Shell) est un protocole réseau permettant :
+d’accéder à une machine distante en ligne de commande
+de manière sécurisée (chiffrement des échanges)
+sur un réseau non fiable
+SSH remplace les anciens protocoles non sécurisés comme telnet ou rlogin.
+
+2. Client SSH et serveur SSH
+SSH fonctionne selon un modèle client / serveur :
+le client SSH initie la connexion
+le serveur SSH (daemon sshd) reçoit les connexions
+Le serveur SSH est configuré via le fichier :
+/etc/ssh/sshd_config
+Toute modification de ce fichier nécessite un rechargement du service ssh pour être appliquée.
+
+3. Principe de sécurité SSH
+L’objectif principal de la configuration SSH est de :
+réduire la surface d’attaque
+contrôler qui peut se connecter
+définir comment l’authentification est faite
+Un serveur SSH mal configuré est une faille critique.
+
+4. Structure du fichier sshd_config
+Le fichier est composé de directives sous la forme :
+Directive valeur
+les lignes commençant par # sont des commentaires
+les directives non définies utilisent les valeurs par défaut
+
+5. Directives essentielles de sécurité
+Port
+Port 22
+définit le port d’écoute du serveur SSH
+changer le port par défaut limite les attaques automatisées
+ListenAddress
+ListenAddress 0.0.0.0
+définit les adresses IP sur lesquelles SSH écoute
+peut être restreint pour limiter l’exposition réseau
+PermitRootLogin
+PermitRootLogin no
+interdit la connexion directe de l’utilisateur root
+empêche les attaques par force brute sur le compte le plus puissant
+Bonne pratique : utiliser un utilisateur standard + sudo.
+PasswordAuthentication
+PasswordAuthentication yes/no
+autorise ou non l’authentification par mot de passe
+désactiver ce mode renforce la sécurité (authentification par clé)
+PubkeyAuthentication
+PubkeyAuthentication yes
+active l’authentification par clé SSH
+méthode plus sécurisée que les mots de passe
+MaxAuthTries
+MaxAuthTries 3
+limite le nombre de tentatives d’authentification
+réduit les attaques par force brute
+LoginGraceTime
+LoginGraceTime 30
+durée maximale pour s’authentifier
+une fois le délai dépassé, la connexion est coupée
+AllowUsers / AllowGroups
+AllowUsers user1 user2
+AllowGroups sshusers
+limite les utilisateurs ou groupes autorisés à se connecter en SSH
+principe du moindre privilège
+X11Forwarding
+X11Forwarding no
+désactive le transfert graphique
+réduit la surface d’attaque si inutile
+
+6. Bonnes pratiques de configuration
+désactiver la connexion root
+limiter les utilisateurs autorisés
+réduire les tentatives de connexion
+préférer l’authentification par clé
+utiliser un port non standard
+ne modifier qu’une option à la fois et tester
+
+7. Après modification de sshd_config
+Après toute modification :
+vérifier la syntaxe
+recharger le service SSH
+Toujours garder une session ouverte lors des tests pour éviter de se bloquer.
+
+8. Risques d’une mauvaise configuration
+accès non autorisé
+attaques par force brute
+compromission totale du système
+perte de contrôle de la machine distante
+
+9. Résumé
+SSH permet l’accès distant sécurisé
+sshd_config contrôle le comportement du serveur SSH
+la configuration vise à limiter les accès et renforcer l’authentification
+une configuration stricte est essentielle pour la sécurité

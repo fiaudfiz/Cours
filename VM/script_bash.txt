@@ -1,0 +1,36 @@
+tout d'abord, on est en bash donc il faut indiquer a l'ordinateur ceci
+#!/bin/bash
+
+le script selon le sujet doit s'appeler monitoring.sh
+
+toutes les 10min, on doit afficher des infos, a savoir:
+l'architecture et la kernel version
+le nombre de processeur physiques
+le nombre de processeurs virtuels
+la RAM dispo sur le serveur et son utilisation en %
+pareil pour le stockage
+pareil pour le processeur
+la date et l'heure du dernier reboot
+si LVM est actif
+le nombre de conections actives
+le nombre de users qui utilisent le serveur
+l'adresse IPV4 de mon serveur et son MAC (Media Acess Control) adresse
+le nombres de commandes executees avec la commande sudo (journal des sudo)
+pendant la defense, on devra l'interrompre sans le modifier (cron)
+
+sortie standart de bash c'est echo
+extension .sh
+commentaires #
+
+
+modifier hostname
+sudo nano /etc/hostname
+sudo nano /etc/hosts
+mettre a jour 
+sudo hostnamectl set-hostname miouali42
+
+Pour arrêter : sudo service cron stop
+
+Pour relancer : sudo service cron start
+
+Pour vérifier : sudo service cron status
