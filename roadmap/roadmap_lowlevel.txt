@@ -1,0 +1,183 @@
+Modèle mémoire du C (C11)
+
+Undefined Behavior (UB) et ses conséquences réelles
+
+Strict aliasing rules
+
+Types, promotions, conversions implicites
+
+Alignement mémoire et padding
+
+Rôle exact de malloc/free
+
+Implémentations d’allocateurs (ptmalloc, jemalloc, tcmalloc)
+
+Interaction C ↔ ABI
+
+Appels de fonctions, passage d’arguments, retour
+
+ABIs majeures : SysV x86‑64, Windows x64, ARM64
+
+Objectif :
+Écrire du C dont le comportement est entièrement maîtrisé et optimisable par le compilateur.
+
+2 — Assembly (x86‑64 et ARM64) pour comprendre
+
+Pas pour écrire de l’asm au quotidien, mais pour comprendre ce que le compilateur produit.
+
+À maîtriser :
+
+Registres, stack frame, prologue / épilogue
+
+Calling conventions
+
+Traduction d’un if / loop / switch en asm
+
+call / ret, jump, flags
+
+PIC / PIE
+
+GOT / PLT
+
+Retpolines
+
+SIMD : SSE, AVX (x86‑64), NEON (ARM64)
+
+Objectif :
+Lire de l’assembleur et comprendre pourquoi certains patterns C sont rapides ou lents.
+
+3 — Architecture CPU moderne (micro‑architecture)
+
+Comprendre ce que fait réellement le CPU avec ton code.
+
+À maîtriser :
+
+Pipeline
+
+Out‑of‑order execution
+
+Branch prediction
+
+Speculative execution
+
+Load buffers / store buffers
+
+Cache hierarchy (L1/L2/L3)
+
+Cache lines et alignement
+
+Cohérence cache (MESI / MESIF)
+
+TLB
+
+Prefetch matériel
+
+Coûts réels : cache miss, misprediction, page fault
+
+Mémoire virtuelle
+
+Tables de pages
+
+Huge pages
+
+Objectif :
+Écrire du code C en tenant compte des coûts matériels réels.
+5 — OS & systèmes internes (Linux)
+
+Niveau requis pour glibc, kernel et infra.
+
+À maîtriser :
+
+Séparation user space / kernel space
+
+Syscalls (chemin réel)
+
+VDSO
+
+Scheduler Linux (CFS, wakeups, preemption)
+
+Gestion mémoire :
+
+Buddy allocator
+
+Slab / SLUB
+
+File descriptors
+
+epoll
+
+signaux
+
+fork / execve
+
+Threads vs processus
+
+cgroups et namespaces (base de Kubernetes)
+
+Objectif :
+Comprendre le coût réel d’un appel système et du scheduling.
+
+6 — Compilateurs & toolchain
+
+Ce qui distingue un bon dev système d’un excellent.
+
+À maîtriser :
+
+GCC et Clang
+
+Flags d’optimisation (-O0, O1, O2, O3, Ofast)
+
+Inlining
+
+Vectorisation
+
+LTO
+
+LLVM IR (lecture et compréhension)
+
+Frontend vs backend
+
+Linker :
+
+ld, gold, lld
+
+Sections ELF
+
+Relocations
+
+Symbol visibility
+
+Debug symbols
+
+DWARF
+
+perf maps
+
+Objectif :
+Savoir exactement comment ton code devient un binaire.
+
+7 — Mesure, profiling et observation
+
+La performance se mesure, elle ne se devine pas.
+
+À maîtriser :
+
+perf stat
+
+perf record / report
+
+cycles, IPC, cache‑miss, branch‑miss
+
+Flamegraphs
+
+objdump
+
+nm
+
+readelf
+
+valgrind
+
+cachegrind
+
+massif
