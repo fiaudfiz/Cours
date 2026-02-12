@@ -1,0 +1,82 @@
+📝 Module 6 : Mémoire Virtuelle, MMU & Système d'Exploitation
+1. L'Espace d'Adressage Virtuel (Virtual Address Space - VAS)
+
+Imagine que chaque programme tourne dans une réalité virtuelle.
+
+    Le Mensonge : Quand ton programme demande l'adresse 0x100, il ne demande pas la 256ème case de ta barrette de RAM. Il demande la 256ème case de son monde imaginaire.
+
+    L'Adresse Virtuelle : C'est un simple numéro (un index) utilisé par le programme.
+
+    L'Adresse Physique : C'est l'emplacement réel des électrons dans la puce de RAM.
+
+Pourquoi s'embêter avec ça ?
+
+    Isolation : Si le Programme A bugue et écrit à l'adresse 0x100, il ne peut pas écraser les données du Programme B, car le 0x100 du Programme B pointe ailleurs dans la vraie RAM.
+
+    Continuité : Ton programme peut croire qu'il a 1 Go de mémoire d'un seul bloc, alors qu'en réalité, l'OS lui a donné 1000 petits morceaux éparpillés partout sur la barrette.
+
+2. La MMU (Memory Management Unit) : Le Traducteur
+
+C'est un composant physique (du silicium) situé entre le CPU et la RAM.
+
+    Définition : C'est le traducteur simultané. Chaque fois que le CPU dit "Donne-moi ce qu'il y a à l'adresse virtuelle 0xABC", la MMU regarde son dictionnaire et crie à la RAM : "Envoie le contenu de la case physique 0x999 !".
+
+    Le TLB (Translation Lookaside Buffer) : C'est le cache personnel de la MMU. Comme chercher dans le dictionnaire (la Page Table) est lent, la MMU garde en mémoire les 500 dernières traductions qu'elle a faites.
+
+        TLB Hit : Traduction instantanée.
+
+        TLB Miss : La MMU doit aller lire la Page Table en RAM (très lent, environ 200 cycles).
+
+3. La Pagination (Paging) : Le découpage
+
+L'OS ne gère pas la mémoire octet par octet (ça ferait un dictionnaire de traduction trop gros). Il découpe tout en Pages.
+
+    La Page (Virtuelle) : C'est un bloc de 4096 octets (4 Ko). C'est l'unité de base de la mémoire.
+
+    Le Cadre (Page Frame - Physique) : C'est la "case" de 4 Ko dans la vraie RAM.
+
+    Analogie : La mémoire est un livre.
+
+        L'adresse virtuelle, c'est "Page 4, ligne 10".
+
+        La MMU traduit ça en "Étagère 2, Rayon B, Volume 5".
+
+        Tu ne peux pas emprunter juste une ligne, l'OS te donne forcément la page entière.
+
+4. Le Page Table (Table des Pages)
+
+C'est le fameux "dictionnaire" stocké en RAM. Il contient la liste des correspondances.
+Mais ce n'est pas qu'une liste, c'est aussi un garde-barrière. Pour chaque page, il stocke des Bits de Permission :
+
+    Present Bit : Est-ce que cette page est vraiment dans la RAM ? (Ou est-elle sur le disque ?)
+
+    Read/Write Bit : Est-ce que le programme a le droit de modifier cette page ?
+
+    User/Supervisor Bit : Est-ce que c'est une page réservée au Kernel (le cerveau de l'OS) ?
+
+5. Le Page Fault (L'Interruption)
+
+C'est l'un des concepts les plus importants de l'informatique.
+
+Le scénario :
+
+    Ton programme essaie d'accéder à l'adresse 0x500.
+
+    La MMU regarde la Page Table et voit que le Present Bit est à 0 (La page n'est pas encore "physiquement" là).
+
+    Le CPU s'arrête net. Il lève une exception : le Page Fault.
+
+    L'OS (le Kernel) arrive en urgence. Il cherche une page de RAM vide, il y place les données, met le Present Bit à 1, et dit au CPU : "C'est bon, ré-essaie".
+
+C'est grâce à ça que tu peux lancer un jeu de 100 Go alors que tu n'as que 16 Go de RAM : l'OS ne charge que les pages dont tu as besoin à l'instant T (on appelle ça le Demand Paging).
+6. Vocabulaire "Deep Tech" récapitulatif
+
+    Kernel Space : La zone de mémoire sacrée où tourne l'OS. Inaccessible pour tes programmes.
+
+    User Space : Ton bac à sable.
+
+    Context Switch (Changement de contexte) : Quand le CPU passe du Programme A au Programme B. Il doit vider le TLB et charger la Page Table du nouveau programme. C'est une opération coûteuse.
+
+    Fragmentation : * Interne : Tu as demandé 10 octets, l'OS t'a donné 4096 octets (une page). Tu gâches 4086 octets.
+
+        Externe : Tu as plein de petits trous de mémoire libre, mais aucun n'est assez grand pour un gros bloc.

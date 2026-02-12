@@ -1,58 +1,84 @@
-Module 5: parallélisme au niveau des donnees (SIMD)
+📝 Module 5 : Le Parallélisme de Données (SIMD)
 
-Le SIMD est une classification de la Taxonomie de Flynn (vav falloir detailler la).
-Different du modele scalaire classique SISD (aexpliquer aussi single instruction, single data),
-le SIMD permet d'appliquer une operation unique a un ensemble de donneees regroupees dans des registres larges. (registres a refefinir plus locallisation).
 
-1 Architecture des Registres Vectoriels\
+1. Concepts Fondamentaux
 
-    Pour supporter le SIMD, le processeur dispose de registres dedies, beaucoup plus larges que les registres generaux (ex de registre general : RAX, RBX):
-        -XMM (SSE- Streaming SIMD Extensions) = 128 bits
-        -YMM (AVX/AVX2 Advenced Vector Extensions) = 256 bits
-        -ZMM (AVX-512) = 512 bits
+	A. La Taxonomie de Flynn
+		
+		C'est un système de classification des architectures d'ordinateurs (inventé par Michael Flynn en 1966). Il classe les machines selon deux axes : le nombre de flux d'instructions et le nombre de flux de données.
+    	SISD (Single Instruction, Single Data) : Le modèle classique "séquentiel". Une instruction modifie une seule donnée à la fois. (Ex: c = a + b).
+		SIMD (Single Instruction, Multiple Data) : Le modèle "vectoriel". Une seule instruction (le "chef d'orchestre") modifie plusieurs données simultanément (l'orchestre).
 
-        Capacite d'un registre YMM: (on rapelle que 1 octet = 8 bits)
-            -4 valeurs double (64 bits chacune)
-            -8 valeurs float ou int (32 bits chacune)
-            -32 valeurs char (8 bits chacune)
-        
-2 Le jeu d'instructions (ISA Extensions)
+	B. Scalaire vs Vectoriel
 
-Le passage du code scalaire au code vectoriel (definir les 2 au debut please si il faut on fait un module dessus)
-nesscite des instructions assembleur specifiques
-    SSE = instructions comme addps (add packed single-precision)
-    AVX/AVX2 : instruction du format d'instructions VEX (Prefixe V) comme vaddpd (Vector Add Packed Double-Precision)
+    Code Scalaire : C'est le code C standard. On manipule des variables unitaires (int, float, double). Une variable = Une valeur.
+    Code Vectoriel : On manipule des "vecteurs". Ce ne sont pas des std::vector du C++, mais des petits tableaux de taille fixe qui rentrent pile dans un registre processeur. Une variable = Un paquet de valeurs (ex: 4 double d'un coup).
 
-3 Implementation en C : 2 approches
+2. Architecture des Registres Vectoriels
 
-    A Les instricts (Bas niveau)
-        ce sont des fonctions C qui mappent directement une instruction assembleur (mapper ?)
-        Elles neccesitent le header <immintrin.h>
-        Exemple : __mm256_add_pd genere l'instruction vaddpd
-        Avantage : Controle Total sur l'instruction geree.
-        Inconvenient : Code verbeux et non portable entre architecture (pk ?)
+	Localisation : Ces registres se trouvent physiquement à l'intérieur du cœur du processeur (Core), juste à côté de l'ALU (Unité Arithmétique et Logique). C'est la mémoire la plus rapide qui existe (plus rapide que le Cache L1).
+	Pour supporter le SIMD, le processeur dispose de registres dédiés, beaucoup plus larges que les registres généraux (comme RAX ou RBX qui font 64 bits) :
+    	XMM (SSE - Streaming SIMD Extensions) : 128 bits.
+    	YMM (AVX/AVX2 - Advanced Vector Extensions) : 256 bits.
+    	ZMM (AVX-512) : 512 bits (Surtout sur les serveurs).
 
-    B Vectors Extensions (abstraction compilateur)
-        __attribute__((vector_size(32))) :
-            le compilateur gere lui meme la selection des instructions et l'overloading (surcharge) des operateurs (a reexpliquer)
-            Auto-vectorisation : Avec les flags -O3 -mavx2, le compilateur tente de transformer tes boucles for classiques en instructions SIMD de lui-meme.
+	Capacité d'un registre YMM (256 bits) :
+			Rappel : 1 octet = 8 bits. Donc 256 bits = 32 octets.
 
-4 le probleme de la divergence (vector divergence)
+    4 valeurs double (64 bits chacune) -> Idéal pour la précision des fractales.
+    8 valeurs float ou int (32 bits chacune).
+    32 valeurs char (8 bits chacune).
 
-Si par ex on fait le projet fract-ol en SIMD en calculant donc 4 nombres complexes en meme temps dans un registre YMM, le probleme est si le 1er complexe a diverge mais pas les 3 autres ? On ne peut pas faire de break ou de if classique.
+3. Le Jeu d'Instructions (ISA Extensions)
 
-La Solution : masking
-    On effectue une comparaison vectorielle (ex : vcmppd)
-    cela genere un mask de bits (un vecteur ou chaque "lane" est soit 0xFFF soit 0x000)
-    On utilise donc des operations de Bitwise Logic (AND, OR, XOR) ou des instructions de "Blend" (vblendvpd) pour ne mettre a jour que les valeurs qui n'ont pas encore diverges.
+	Le passage du code scalaire au code vectoriel nécessite que le CPU comprenne de nouveaux mots (Instructions Assembleur).
+    SSE (Legacy) : Utilise les registres XMM. Instructions comme addps (Add Packed Single-precision).
+    AVX/AVX2 (Moderne) : Utilise les registres YMM. Introduit le format VEX (les instructions commencent souvent par "v").
+        Exemple : vaddpd (Vector Add Packed Double-Precision).
+        Traduction : "Additionne (Add) des paquets (Packed) de nombres à virgule flottante double précision (Double)".
 
-5 Contraintes de Perf : Alignement et Debit
+4. Implémentation en C : Deux Approches
+	
+	A. Les Intrinsics (Bas niveau)
 
-L'alignement Memoire : les instructions de chargement vectoriel sont optimises pour des adresses alignes sur la taille du registres (ex : 32 octets pour AVX)
-vmovaps (Aligned) : Tres rapide
-vmovups (Unaligned) : Plus lent, car on peut chevaucher 2 Caches Lines.
-Throughput (Débit) vs Latency (Latence) :
+		Ce sont des fonctions C bizarres (fournies par <immintrin.h>) qui servent de pont direct vers l'assembleur.
+    	Mapper : Cela signifie qu'il y a une correspondance "1 pour 1". Quand tu écris la fonction C _mm256_add_pd(...), le compilateur n'a pas le choix : il doit écrire l'instruction assembleur vaddpd dans le binaire final.
+    	Inconvénient (Non portable) : Ces fonctions sont liées à l'architecture du processeur (Intel/AMD x86). Si tu essaies de compiler ce code pour un MacBook M1/M2/M3 (Architecture ARM), ça plantera, car l'instruction vaddpd n'existe pas chez ARM (ils utilisent "NEON").
 
-    La latence est le temps pour une instruction de traverser le pipeline.
+	B. Vector Extensions (Abstraction Compilateur)
 
-    Le throughput est le nombre d'instructions du même type que le CPU peut lancer par cycle. Le SIMD maximise le débit de données traitées par cycle d'horloge.
+		L'approche plus moderne et lisible (celle de GCC/Clang).
+		typedef double v4d __attribute__((vector_size(32)));
+    	Surcharge d'opérateur (Overloading) : En C standard, le signe + ne sait additionner que des nombres. Ici, le compilateur est "entraîné" pour comprendre que si on met un + entre deux vecteurs v4d, il doit générer l'instruction vectorielle vaddpd pour additionner les 4 éléments d'un coup.
+    	Auto-vectorisation : Avec les flags -O3 -mavx2, le compilateur essaie d'être intelligent. S'il voit une boucle for (i=0; i<4; i++), il peut décider tout seul de la transformer en une seule instruction SIMD.
+
+5. Le Problème de la Divergence
+
+	Dans un code scalaire (SISD), le processeur peut prendre des chemins différents pour chaque donnée (via des if / else).
+	En SIMD, les 4 données sont "liées" ensemble dans le registre. Elles subissent la même instruction au même moment.
+
+		Projet Fract-ol :
+		Si tu calcules 4 pixels. Le pixel #1 a fini (il est sorti du cercle), mais les pixels #2, #3, #4 doivent continuer. Le processeur ne peut pas arrêter le calcul pour le #1 seulement.
+
+		La Solution : Le Masquage (Masking)
+		On compare tout le monde : vcmppd.
+    	Cela crée un Masque : un vecteur de "Vrai/Faux" binaire.
+        Pixel 1 fini : 0x000... (Tout à zéro).
+        Pixel 2 continue : 0xFFF... (Tout à un).
+
+    On utilise des opérations logiques (AND, OR) pour "filtrer". On continue les calculs pour tout le monde, mais on n'enregistre les résultats que là où le masque est à 1.
+
+6. Contraintes de Performance
+	
+	A. Alignement Mémoire
+
+		Le CPU charge les données par blocs de 128 ou 256 bits.
+    	Aligné : L'adresse mémoire est un multiple de 32 (pour AVX). Le CPU charge le bloc en une seule traite. (vmovaps - Aligned Packed Single).
+    	Non-aligné : L'adresse est "bancale". Le bloc de données peut être à cheval sur deux Cache Lines différentes. Le CPU doit faire deux lectures et recoller les morceaux. C'est plus lent. (vmovups - Unaligned).
+
+	B. Latence vs Débit (Throughput)
+
+    	Latence : Le temps qu'il faut à une seule voiture pour traverser l'autoroute (le pipeline).
+    	Débit (Throughput) : Le nombre de voitures qui peuvent passer en une heure.
+    	Le SIMD n'améliore pas la latence (le calcul a+b ne va pas plus vite).
+    	Le SIMD explose le débit (on fait 4 calculs a+b dans le même laps de temps).
