@@ -1,0 +1,16 @@
+Module 5: parallélisme au niveau des donnees (SIMD)
+
+Le SIMD est une classification de la Taxonomie de Flynn (vav falloir detailler la).
+Different du modele scalaire classique SISD (aexpliquer aussi single instruction, single data),
+le SIMD permet d'appliquer une operation unique a un ensemble de donneees regroupees dans des registres larges. (registres a refefinir plus locallisation).
+
+1 Architecture des Registres Vectoriels\
+
+    Pour supporter le SIMD, le processeur dispose de registres dedies, beaucoup plus larges que les registres generaux (ex de registre general : RAX, RBX):
+        -XMM (SSE- Streaming SIMD Extensions) = 128 bits
+        -YMM (AVX/AVX2 Advenced Vector Extensions) = 256 bits
+        -ZMM (AVX-512) = 512 bits
+
+        Capacite d'un registre YMM: (on rapelle que 1 octet = 8 bits)
+            -4 valeurs double (64 bits chacune)
+            -8 valeurs float ou int (32 bits chacune)
