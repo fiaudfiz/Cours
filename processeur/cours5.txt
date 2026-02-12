@@ -14,3 +14,45 @@ le SIMD permet d'appliquer une operation unique a un ensemble de donneees regrou
         Capacite d'un registre YMM: (on rapelle que 1 octet = 8 bits)
             -4 valeurs double (64 bits chacune)
             -8 valeurs float ou int (32 bits chacune)
+            -32 valeurs char (8 bits chacune)
+        
+2 Le jeu d'instructions (ISA Extensions)
+
+Le passage du code scalaire au code vectoriel (definir les 2 au debut please si il faut on fait un module dessus)
+nesscite des instructions assembleur specifiques
+    SSE = instructions comme addps (add packed single-precision)
+    AVX/AVX2 : instruction du format d'instructions VEX (Prefixe V) comme vaddpd (Vector Add Packed Double-Precision)
+
+3 Implementation en C : 2 approches
+
+    A Les instricts (Bas niveau)
+        ce sont des fonctions C qui mappent directement une instruction assembleur (mapper ?)
+        Elles neccesitent le header <immintrin.h>
+        Exemple : __mm256_add_pd genere l'instruction vaddpd
+        Avantage : Controle Total sur l'instruction geree.
+        Inconvenient : Code verbeux et non portable entre architecture (pk ?)
+
+    B Vectors Extensions (abstraction compilateur)
+        __attribute__((vector_size(32))) :
+            le compilateur gere lui meme la selection des instructions et l'overloading (surcharge) des operateurs (a reexpliquer)
+            Auto-vectorisation : Avec les flags -O3 -mavx2, le compilateur tente de transformer tes boucles for classiques en instructions SIMD de lui-meme.
+
+4 le probleme de la divergence (vector divergence)
+
+Si par ex on fait le projet fract-ol en SIMD en calculant donc 4 nombres complexes en meme temps dans un registre YMM, le probleme est si le 1er complexe a diverge mais pas les 3 autres ? On ne peut pas faire de break ou de if classique.
+
+La Solution : masking
+    On effectue une comparaison vectorielle (ex : vcmppd)
+    cela genere un mask de bits (un vecteur ou chaque "lane" est soit 0xFFF soit 0x000)
+    On utilise donc des operations de Bitwise Logic (AND, OR, XOR) ou des instructions de "Blend" (vblendvpd) pour ne mettre a jour que les valeurs qui n'ont pas encore diverges.
+
+5 Contraintes de Perf : Alignement et Debit
+
+L'alignement Memoire : les instructions de chargement vectoriel sont optimises pour des adresses alignes sur la taille du registres (ex : 32 octets pour AVX)
+vmovaps (Aligned) : Tres rapide
+vmovups (Unaligned) : Plus lent, car on peut chevaucher 2 Caches Lines.
+Throughput (Débit) vs Latency (Latence) :
+
+    La latence est le temps pour une instruction de traverser le pipeline.
+
+    Le throughput est le nombre d'instructions du même type que le CPU peut lancer par cycle. Le SIMD maximise le débit de données traitées par cycle d'horloge.
