@@ -1,0 +1,20 @@
+MLX_LOOP()
+
+Apres avoir une fenetre qui s'affiche, le programme va continuer.... et s'arreter.
+mlx_loop cest une un e boucle infinie qui maintient ton programme en vie et qui ecoute tout ce qui se passe: touches clavier, clics souris etc.
+
+mlx_new_window() -> fenetre visible
+mlx_loop() -> programme vivant, ecoute et dispatche les events.
+
+c'est un appel bloquant : rien apres ceci dans un code ne s'executera tant que la boucle tourne.
+
+La fonction mlx_loop() en 3 etapes:
+
+    -prepare la bouble mlx_int_set_win_event_mask() applique les masques d'events sur les fenetres.
+        Puis do flush passe a 0 et c'est Xsync qui gere la synchro avec le serveur X11, plus besoin de flush manuel.
+    -ecoute et dispatche les events X11.XNextEventm recupere le prochain event de la file X11, trouve a quelle fenetre il appartient puis appel le hook correspondant avec mlx_hook()
+    -Appele loop_hook() a chaque tour: apres avoir vide la file d'events, XSync synchronise avec le serveur X11.
+
+Cas particulier :
+    la croix n'est pas un event classique.C'est un ClientMessage envoye par le window manager,
+        la boucle detecte manuellement en verifiant l'atome WM_DELETE_WINDOW prepare dans mlx_init.
