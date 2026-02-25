@@ -1,0 +1,20 @@
+MLX_INIT()
+
+Quand on lance un programme graphique sous Linux, la mlx parle a un serveur X11 (Xorg) qui gere l'affichage.
+C'est un architecture client/serveur qui tourne en local sur la machine.
+
+```
+Programme(client)<-> Xorg(Serveur X11) -> ecran
+```
+
+la fonction mlx sert simplement a se connecter a ce serveur X11 et preparer a dessiner.
+
+la fonction MLX_INIT() en 4 etapes:
+
+    -Alloue structure de travail (t_xar)
+    -Ouvrir la connection au serveur X11
+    -Recupere les infos de l'ecran
+    -Prepare l'encodage des couleurs et la memoire partagee.
+
+Valeur de retour:
+    elle rettourne un void* qui pointe sur t_xar, il faudra passer ce pointeur a toutes les autres fonction de la MLX sans exception.
