@@ -1,0 +1,33 @@
+MLX_NEW_WINDOW()
+
+apres MLX_INIT, on a une connection su serveur X11 mais rien de visible a l'ecran.
+MLX_NEW_WINDOW c'est l'etape qui cree la fenetre et la fait apparaitre.
+En interne, la fenetre existe dans 2 endroits dans la memoire de ton programme (une t_win_list) et cote serveur X11 (une vrai Window X11).
+Les 2 sont lies.
+
+mlx_init() -> connection au serveur X11
+mlx_new_window() -> fenetre visible + structure pour la gerer
+
+La fonction mlx_new_window en 4 etapes :
+    
+    -Configure les attributs X11 (couleur de fond, bordure), 
+        la colormap heritee de mlx_init() 
+        et surtout event_mask = 0xFFFFFF qui dit au serveur X11 d'evoyer tous les evenements possibles (calvier , souris etc)
+    -Cree la vraie fenetre cote serveur X11 via XcreateWindow en lui passant le display,
+        la fenetre root comme parentm la taille que tu as donnee, et tous les attributs
+        A ce stade, la fenetre existe mais est encore invisible
+    -Prepare le Graphic Context (GC). GC = pinceau : il stocke la couleur du dessin,
+        l'operation (copie directe) le masque des plans. chaque fenetre a le sien.
+    -Affiche et attend la confirmation XMapRaised rend la fenetre visible au premier plan, 
+        puis mlx_int_wait_first_expose()  bloque jusqu'a ce que le serveur X confirme que la fenetre est bien rendue a l'ecran.
+
+valeur de retour :
+    elle retourne un void * vers une t_win_list ce pointeur represente cette fenetre specifiquement,
+    on le passe a tout ce qui concerne cette fenetre.
+
+En plus :
+    la fenetre n'est pas redimensionnable par design.mlx_int_anti_resize_win pose des contraintes de tailles fixe cote windows manager.
+    cela evite d'avoir a gerer un callback de resize.
+
+    On peut creer plusieurs fenetres : la mlx les gere en liste chainees dans t_xvar.mlx_loop() itere sur toutes pour dispatcher les evenements a la bonne fenetre.
+    
