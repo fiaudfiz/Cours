@@ -18,3 +18,20 @@ La fonction mlx_loop() en 3 etapes:
 Cas particulier :
     la croix n'est pas un event classique.C'est un ClientMessage envoye par le window manager,
         la boucle detecte manuellement en verifiant l'atome WM_DELETE_WINDOW prepare dans mlx_init.
+        Pour que la croix fonctionne on doit brancher le hook a l'event.
+
+2 modes de fonctionnement :
+
+    le comportement de la boucle change completement selon que on a un mlx_hook ou non.
+    sans loop_hook : XNextEvent bloque jusqu'au prochain event le programme "dort" -> mode statique, pour un programme qui ne fait rien tant que on agit pas
+    avec loop_hook : le programme tourne en continu c'est le mode pour les animations et le rendu en temps reel.
+
+
+Comment arreter la boucle  = mlx_loop_end()
+
+    la seul facon se stopper la boucle depuis un hook.Elle met le flag end_loop a 1
+    et le while externe s'arrete au tour suivant.La boucle s'arrete naturellement si toutes les fenetres ont ete detruites.
+
+Valeur de retour :
+    elle return un 0 quand la boucle se termine proprement.On s'en sert rarement.
+    
