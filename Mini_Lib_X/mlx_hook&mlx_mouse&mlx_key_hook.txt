@@ -1,0 +1,23 @@
+MLX_HOOK, MLX_KEY_HOOK et MLX_MOUSE_HOOK
+
+mlx_hook
+
+    la plus puissante des 3 :
+    elle remplit juste 3 champs dans le tableau hook et la fenetre, a l'index x_event.
+    mlx_loop s'occupe d'appeler ce qu'il y a dans ce tableau quand un event arrive.
+
+    A savoir : dans cette fonction on a des fonctions bonus qui servent a activer/desactiver la repetition auto des touches
+    -int mlx_do_key_autorepeatoff(t_xvar *xvar)
+    -int mlx_do_key_autorepeaton(t_xvar *xvar)
+
+    on a egelement la fonction int mlx_do_sync(t_xvar *xvar) qui va forcer la synchro avec le serveur X11 et attend que le serveur les aie toutes traitees.
+
+mlx_key_hook
+
+C'est juste un raccourci de mlx_hook, elle branche direct le hook sur Key_release avec KeyReleaseMask.
+remarque : on recoit tout le temps Key_release , donc on recoit seulement quand on relache la touche.
+
+
+mlx_mouse_hook
+
+meme principe, raccourci de mlx_hook pour les clics souris.Branche sur ButtonPress.On recoit quand on appuie sur un bouton de la souris.
