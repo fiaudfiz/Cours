@@ -1,0 +1,12 @@
+MUTEX
+
+un mutex est une primitive de synchronisation utilisee en programmation pour evuter qu'une ressource partagee d'un systeme ne soit utilisee en meme temps par plusieurs users/threads.
+
+dans le cas ou un thread veut lire une donnee et un autre thread veut affecter une nouvelle donee a celle-ci, 
+cela peut amener a des comportements non souhaites.Ainsi, si un thread ecrit dans un fichier pendant qu'un autre thread lit dans le meme fichier,
+le resultat de la lecture peut etre incoherent.
+Dans ce contexte, un mutex sert a empecher l'acces simultane en laissant les differents agents acceder a la ressource l'un apres l'autre.
+le mutex doit savoir si les programmes cherchant a acceder a la donnee sont occupes ou si ils ont termines ou si ils sont en attente.
+
+La plupart des mutex ont des effets secondaires.Ainsi, les semaphores (mutex avec un compteur) peuvent bloquer l'execution en creeant des goulots d'etranglement.
+Un autre effet est le blocage total de la ressource tant que le programme qui l'utilisait n'a pas informe le systeme qu'il n'en avait plus besoin.
