@@ -1,0 +1,27 @@
+Thread
+
+un thread est similaire a un processus car tous 2 representent l'execution d'un ensemble d'instructions du language machine d'un processeur.
+
+D'un point de vu utilisateur, ces executions semblent se derouler en parallele.
+toutefois, la ou chaque processus possede sa propre memoire virtuelle, les threads d'un meme processus se partagent sa memoire virtuelle.
+En revanche, tout les threads possedeent leurs propres pile d'execution.
+
+Les threads sont utilises dans des programmes de calcul intensif (ex: encodage d'une video, simulation mathematique).
+L'utilisation de plusieurs threads permet de paralleliser le traitement ce qui, sur les machines multi processeur permet de l'effectuer plus rapidement.
+
+2 processus sont totalement independants et isoles l'un de l'autre, ils ne peuvent interagir qu'a travers une API fournie par le systeme.
+A l'inverse, les threads partagent une information sur l'etat du processus, des zones de memoires, ainsi que d'autres ressources.
+A part leurs pile d'appel, les thread partagent globalement tout, puisque il n'ya pas de changement de memoire virtuelle.
+
+Inconvenients :
+
+la programmation utilisant les threads est plus rigoureuse que la programmation sequentielle, 
+et l'acces a certaines ressources partagees pour eviter que l'etat d'un processus devienne temporairement incoherent,
+tandis que un autre thread va avoir besoin de consulter cette portion de l'etat du processus.Il est donc obligatoire de mettre en place des mecanismes de synchro
+(a l'aide de semaphore par exemple) tout en conservant a l'esprit que l'utilisation de la synchro peut aboutir a des situations d'interblocage si elle est mal utilisee.
+
+Listes des problemes possibles du a une erreur de synchro:
+
+    -interblocages apparement aleatoires ( changement de vitesse du processeur, peripheriques plus ou moins rapides, un programme plus lourd que un autre...)
+    -complexification inutile de certains algorithmes (introductions de variables globales)
+    -sur utilisation des mecanismes de synchro inadaptes la ou ils ne sont pas necessaires, induisant un surcout de temps processeur inutile.
