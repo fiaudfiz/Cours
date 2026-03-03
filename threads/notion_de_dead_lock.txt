@@ -1,0 +1,18 @@
+Deadlock
+
+un inter blocage est un phenomene qui peut survenir en programmation concurrente.
+Un deadlock se produit lorsque 2 processus s'attendent mutuellement.Un processus peut aussi s'attendre lui-meme.
+Les processus bloques dans cet etat le sont definitivement, il s'agit donc d'une situation catastrophique,
+les macanismes conduisant aux deadlock ont ete etudies par Edward G.Coffman Jr.
+
+Il y a 4 conditions necessaires pour avoir un deadlock :
+
+    -exclusion mutuelle : au moins une ressource doit etre partagee dans un monde non partageable.
+    -hold and wait ou ressource holding : 
+        un processus detient actuellement au moins une ressource et demande des ressources supplementaires qui sont detenues par d'autres processus.
+    -non preemption : une ressource ne peut etre liberee que volontairement par le processus qui la detient.
+    -attente circulaire : chaque processus doit attendre une ressource qui est detenue par un autre processus, qui a son tour attend que le premier processus libere la ressource.
+        en general dans ce cas la il existe un ensemble de processus en attente
+        P = {P1, P2, ..., PN} tel que P1 attend une ressource detenue par P2, P2 attend une ressource detenue par P3.
+
+ces 4 conditions sont connues sous le nom de "conditions de Coffman".   
