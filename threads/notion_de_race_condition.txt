@@ -1,0 +1,12 @@
+Race condition (situation de competition)
+
+un race condition est une situation caracterisee par un resultat different selon l'ordre dans lequel agissent  les acteurs du systeme.
+C'est generalement considere comme un defaut car source de panne ou de blocage.
+
+un race condition peut survenir des que plusieurs acteurs tentent d'acceder au meme moment a une ressource partagee et qu'au moins l'un d'entre eux est susceptible de modifier son etat.
+Cela implique que les systemes dont les ressources sont immuables sont proteges contre ce probleme.
+
+Les race condition sont des problemes particulierement difficiles a identifier et a corriger puisqu'ils ne surviennent qu'a la suite
+d'un ordonnecement particulier et difficilement reproductible d'une suite d'evenements.
+
+Pour proteger cela on va utiliser l'exclusion mutuelle (ex : mutex -> version simplifiee des semaphores)
