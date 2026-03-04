@@ -1,0 +1,60 @@
+Philo
+
+Chaque philosophers peut faire que 3 actions :
+    -manger
+    -reflechir
+    -dormir
+
+A tout moment du programme, ils doivent toujours etre dans un des 3 Etats.
+
+Nombre de fourchettes =  nombres de philo
+Quand un philo a fini de manger, il va dormir.Une fois reveille, il reflechit.
+Si il n'a pas mange depuis trop longtemps, il va mourir de faim.
+Si un philo meurt, la simulation s'arrete.
+
+Fonctions autorisees :
+    memset
+    printf
+    malloc
+    free
+    write
+    usleep
+    gettimeoftheday
+    pthread_create
+    pthread_detach
+    pthread_join
+    pthread_mutex_init
+    pthread_mutex_destroy
+    pthread_mutex_lock
+    pthread_mutex_unlock
+
+Chaque philo = un thread
+
+tout doit etre dans un dossier "philo/"
+
+le programme doit contenir ceci :
+
+    ./philo  NUMBER_OF_PHILO TIME_TO_DIE TIME_TO_EAT TIME_TO_SLEEP (NUMBER_MAX_OF_EAT)
+
+donc deja on pourra proteger avec if argc n'est pas 5 ou 6
+
+ensuite on fera passer par atoi pour remplir nos variables
+
+le programme doit etre absolument le meme pour tout type de parametre.
+
+on ma parle de pair, impair.
+De toute facon, on doit commencer par faire manger qqun (ex le premier)
+on peut peut etre faire deja 2 sous-codes (un ou on a un max de manger et l'autre ou on l'a pas)
+
+on va prendre un cas ou sont ilimites :
+
+on cree plusieurs threads et dans chacun on lance le timer pour savoir si il y en a un qui va mourir.
+
+et ensuite on s'attaque au premier
+on regarde si il a bien 2 fourchettes libres et si oui il commence a manger donc autre timer
+il faut que tous les process soienet lies au "pere" pour que il sache s qqunm meut.
+on peut par ex faire une boucle infinie dans le main et appeler les diferentes fonctions apres avoir cree les threads.
+on fait un while 1 avec une struct et on aura  un break si jamais qqun meurt (on ne prend pas en coptye pour le moment le 6e arg)
+on ma aussi dit de creer dans une boucle while les threads avec un tableau qui les contient.
+je suis pas trop sur pour le mask ni le while (1) mais trql.
+on a pas le droit d'utiliser
