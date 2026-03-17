@@ -57,4 +57,5 @@ on peut par ex faire une boucle infinie dans le main et appeler les diferentes f
 on fait un while 1 avec une struct et on aura  un break si jamais qqun meurt (on ne prend pas en coptye pour le moment le 6e arg)
 on ma aussi dit de creer dans une boucle while les threads avec un tableau qui les contient.
 je suis pas trop sur pour le mask ni le while (1) mais trql.
-on a pas le droit d'utiliser
+on a pas le droit d'utiliser le mutex_trylock sinon c'est trop facile donc on va devoir decouvrir par nous meme comment gerer ce cas.
+

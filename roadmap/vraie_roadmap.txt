@@ -1,0 +1,121 @@
+Module 1 : Le Modèle Mémoire du C (C11)
+
+        Types, promotions entières, et conversions implicites.
+
+        Le Strict Aliasing : Pourquoi int* et float* ne doivent jamais pointer sur la même case.
+
+    Module 2 : L'Enfer de l'Undefined Behavior (UB)
+
+        Ce que le compilateur fait quand tu débordes d'un tableau ou que tu fais un overflow sur un int signé (il supprime ton code !).
+
+    Module 3 : Alignement et Padding
+
+        Maîtriser sizeof, organiser tes struct pour le Cache L1 et pour l'AVX2.
+
+    Module 4 : Les Allocateurs Mémoire (Le vrai visage de malloc)
+
+        Rôle de malloc/free vs les appels système brk/mmap.
+
+        Comment fonctionnent ptmalloc (glibc), jemalloc et le Buddy Allocator de l'OS.
+
+    Module 5 : L'Architecture du Compilateur
+
+        Différence entre Frontend (C vers AST) et Backend (génération d'assembleur).
+
+        Comprendre la Représentation Intermédiaire : LLVM IR.
+
+    Module 6 : L'art de l'Optimisation (GCC/Clang)
+
+        Que font vraiment -O1, -O2, -O3, -Ofast ?
+
+        Le LTO (Link Time Optimization) et l'inlining agressif.
+
+    Module 7 : Le Linker (ld) et le format ELF
+
+        Anatomie d'un binaire Linux : Sections .text, .data, .bss, .rodata.
+
+        Relocations, Symbol Visibility, et la différence entre static et dynamic linking.
+
+🗓️ MOIS 2 : Le Métal (Assembleur & Micro-Architecture Avancée)
+
+Objectif : Lire l'assembleur couramment et comprendre les "coûts cachés" du processeur.
+
+    Module 8 : Bases d'Architecture (x86-64 vs ARM64)
+
+        CISC vs RISC. Pourquoi les instructions diffèrent.
+
+        Les registres généraux (RAX, RDI, etc.) et les Flags (ZF, CF).
+
+    Module 9 : Calling Conventions & ABI
+
+        La SysV ABI : Comment les arguments sont passés (les 6 premiers dans les registres, le reste sur la Stack).
+
+    Module 10 : La Stack Frame (La Pile d'Exécution)
+
+        Le Prologue et l'Épilogue (push rbp, mov rbp, rsp).
+
+        Gestion des variables locales et de l'adresse de retour (call / ret).
+
+    Module 11 : Traduction du C en Assembleur
+
+        Comment le compilateur traduit un if/else, un switch (Jump Tables), et une boucle for.
+
+    Module 12 : Exécution Spéculative & Out-of-Order (Deep Dive)
+
+        Load/Store buffers : Pourquoi une écriture mémoire est mise "en attente".
+
+        Comment le CPU réordonne tes instructions à la volée pour ne jamais s'arrêter.
+
+    Module 13 : Cohérence de Cache (Multi-core)
+
+        Le protocole MESI (Modified, Exclusive, Shared, Invalid).
+
+        Pourquoi deux threads qui écrivent à côté l'un de l'autre détruisent les performances (False Sharing).
+
+    Module 14 : SIMD Avancé (x86-64 et NEON)
+
+        Passer de l'auto-vectorisation aux Intrinsics (coder directement les instructions vectorielles en C).
+
+🗓️ MOIS 3 : OS Internals, Kernel Linux et Profiling
+
+Objectif : Maîtriser l'environnement système et prouver tes optimisations avec des mesures réelles.
+
+    Module 15 : Protection Système et Rings
+
+        Différence stricte entre User Space (Ring 3) et Kernel Space (Ring 0).
+
+    Module 16 : Les Appels Système (Syscalls)
+
+        Le chemin exact d'un appel : de ton code C, à la libc, à l'interruption logicielle (syscall), jusqu'au Kernel.
+
+        Le vDSO : Comment Linux triche pour accélérer certains appels système (comme avoir l'heure).
+
+    Module 17 : Mémoire Virtuelle Avancée
+
+        Le fonctionnement des Tables de Pages à plusieurs niveaux (Page Tables).
+
+        Le TLB (Translation Lookaside Buffer) et pourquoi utiliser les Huge Pages (pages de 2Mo) pour les grosses applis.
+
+    Module 18 : Le Scheduling et les Processus
+
+        Le Scheduler Linux (CFS - Completely Fair Scheduler).
+
+        fork(), execve(), et la vraie différence entre un Thread (pthread) et un Processus du point de vue de l'OS.
+
+    Module 19 : I/O et Réseau
+
+        File Descriptors (Tout est un fichier).
+
+        La révolution epoll pour gérer des milliers de connexions réseau sans bloquer le CPU.
+
+    Module 20 : L'Observation et le Profiling (perf)
+
+        Mesurer ce qui compte : IPC (Instructions per Cycle), Cache-miss, Branch-miss.
+
+        Utiliser perf record et perf report.
+
+    Module 21 : Visualisation Avancée (Flamegraphs & Valgrind)
+
+        Générer et lire un Flamegraph pour trouver le goulot d'étranglement de ton CPU.
+
+        Utiliser Cachegrind (pour simuler le cache) et Massif (pour profiler ta consommation de RAM).

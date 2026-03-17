@@ -15,12 +15,11 @@ int ft_strlen(char *str)
 void    swap(char *str, int i, int j)
 {
     char temp;
-
+    
     temp = str[i];
     str[i] = str[j];
     str[j] = temp;
 }
-
 
 char *sort_str(char *str)
 {
@@ -45,19 +44,24 @@ char *sort_str(char *str)
     return (str);
 }
 
-void    permutations(char *str, int index_of_depart, int taille)
+void    permutations(char *str, int *used,char *result, int index_of_result, int taille)
 {
-    if (index_of_depart == taille)
+    if (index_of_result == taille)
     {
-        printf("%s\n", str);
+        result[taille] = '\0';
+        printf("%s\n", result);
         return;
     }
-    int i = index_of_depart;
+    int i = 0;
     while (i < taille)
     {
-        swap(str, index_of_depart, i);
-        permutations(str, index_of_depart + 1, taille);
-        swap (str, index_of_depart, i);
+        if (!used[i])
+        {
+            used[i] = 1;
+            result[index_of_result] = str[i];
+            permutations(str, used, result, index_of_result + 1, taille);
+            used[i] = 0;
+        }
         i++;
     }
 }
@@ -65,10 +69,23 @@ void    permutations(char *str, int index_of_depart, int taille)
 int main(int ac, char **av)
 {
     char *str_sorted;
+    char *result;
+    int *used;
+    int taille = ft_strlen(av[1]);
 
     if (ac != 2)
         return (0);
     str_sorted = sort_str(av[1]);
-    permutations(str_sorted, 0, ft_strlen(str_sorted));
+    result = malloc(sizeof(char) * (taille + 1));
+    used = malloc(sizeof(int) * taille);
+    if (!result || !used)
+        return (1);
+    int i = 0;
+    while (i < taille)
+    {
+        used[i] = 0;
+        i++;
+    }
+    permutations(str_sorted, used, result, 0, taille);
 
 }
