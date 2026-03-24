@@ -1,2 +1,0 @@
-Nombres complexes en C:
-
