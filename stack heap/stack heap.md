@@ -32,7 +32,7 @@ Le CPU et l'OS ne voient pas la mémoire comme une suite d'octets, mais comme de
 
 > Un expert sait qu'un `memset` sur un grand `malloc` force la création immédiate de toutes les pages — utile pour **optimiser la latence** en production.
 
-### B. L'[Alignement](memory alignement) et le Padding *(Data Alignment)*
+### B. [L'Alignement](https://github.com/fiaudfiz/Cours/blob/main/memory%20alignement/tailles%20types.md) et le Padding *(Data Alignment)*
 
 Le processeur lit les données par blocs de 4 ou 8 octets. Le compilateur insère du **padding invisible** pour respecter cet alignement.
 
