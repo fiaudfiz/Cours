@@ -2,6 +2,16 @@
 
 ---
 
+## Table des matières
+
+1. [Concepts Fondamentaux](#1-concepts-fondamentaux)
+2. [Architcture des Registres Vectoriels](#2-architecture-des-registres-vectoriels)
+3. [Le Jeu d'Instruction](#3-le-jeu-dinstructions-isa-extensions)
+4. [Implementation en C](#4-implémentation-en-c--deux-approches)
+5. [Le Problème de la Divergence](#5-le-problème-de-la-divergence)
+
+---
+
 ## 1. Concepts Fondamentaux
 
 ### A. La Taxonomie de Flynn

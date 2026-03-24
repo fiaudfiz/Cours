@@ -2,6 +2,16 @@
 
 ---
 
+## Table des matières
+
+1. [Le "Memory Wall"](#1-le-problème--le-memory-wall)
+2. [La Pyramide des Caches](#2-la-pyramide-des-caches)
+3. [Cache Hit vs Cache Miss](#3-mécanisme--cache-hit-vs-cache-miss)
+4. [Le Principe de Localité](#4-le-principe-de-localité)
+5. [Cas d'École : Parcours de Matrice](#5-cas-décole--parcours-de-matrice)
+
+---
+
 ## 1. Le Problème : Le "Memory Wall"
 
 Le **CPU** va des centaines de fois plus vite que la **RAM**. Pour éviter que le CPU passe sa vie à attendre ses données, on utilise une structure en pyramide appelée **hiérarchie mémoire**.

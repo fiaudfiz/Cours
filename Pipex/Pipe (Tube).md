@@ -140,5 +140,3 @@ exec()          →  Lance la commande dans l'enfant
 ```
 
 ---
-
-*Cours rédigé dans le cadre du projet **Pipex** — 42 School*

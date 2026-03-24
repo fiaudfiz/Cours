@@ -1,5 +1,16 @@
 # Module 2 — L'Exécution : De la Syntaxe au Signal
 
+---
+
+## Table des matières
+
+1. [La Pierre de Rosette — ISA](#1-la-pierre-de-rosette--isa-instruction-set-architecture)
+2. [Le Registre PC](#2-le-chef-de-chantier--le-registre-pc)
+3. [Fetch → Decode → Execute → Store](#3-le-cycle-de-vie--fetch--decode--execute--store)
+4. [La Logique : `if` et `while`](#4-la-logique--comment-fonctionnent-if-et-while-)
+
+---
+
 Dans le Module 1, nous avons vu la machine (**Hardware**). Ici, nous voyons comment le code (**Software**) prend le contrôle de la machine.
 
 ---

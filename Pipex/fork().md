@@ -2,6 +2,16 @@
 
 ---
 
+## Table des matières
+
+1. [Définition](#1-définition)
+2. [Le Mécanisme Copy-on-Write](#2-le-mécanisme-copy-on-write-cow)
+3. [Valeurs de Retour — Le Sélecteur](#3-valeurs-de-retour--le-sélecteur)
+4. [L'Héritage — Ce qui est copié](#4-lhéritage--ce-qui-est-copié)
+5. [Synchronisation et Cycle de Vie](#5-synchronisation-et-cycle-de-vie)
+
+
+---
 ## 1. Définition
 
 `fork()` est l'appel système pilier de la gestion des processus sous UNIX. Il permet à un processus (le **Père**) de créer une copie conforme de lui-même (le **Fils**) dans un nouvel espace mémoire.

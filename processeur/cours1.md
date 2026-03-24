@@ -1,5 +1,16 @@
 # Module 1 — L'Infrastructure Physique du Calcul
 
+---
+
+## Table des matières
+
+1. [L'Horloge](#1-le-rythme--lhorloge-clock)
+2. [Le Transistor](#2-la-matière--le-transistor)
+3. [Le Modèle de Von Neumann](#3-lorganisation--le-modèle-de-von-neumann-1945)
+4. [Anatomie Interne du CPU](#4-anatomie-interne-du-cpu)
+
+---
+
 Pour qu'un ordinateur exécute du code, il doit convertir de l'énergie (électrons) en logique (mathématiques). Cette transformation repose sur un rythme et une structure précise.
 
 ---

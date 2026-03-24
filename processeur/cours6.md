@@ -2,6 +2,16 @@
 
 ---
 
+## Table des matières
+
+1. [L'Espace d'Adressage Virtuel](#1-lespace-dadressage-virtuel-virtual-address-space--vas)
+2. [La MMU *(Memory Management Unit)*](#2-la-mmu-memory-management-unit--le-traducteur)
+3. [La Pagination](#3-la-pagination-paging--le-découpage)
+4. [La Page Table](#4-la-page-table-table-des-pages)
+5. [Le Page Fault](#5-le-page-fault-linterruption)
+
+---
+
 ## 1. L'Espace d'Adressage Virtuel *(Virtual Address Space — VAS)*
 
 Chaque programme tourne dans sa propre **réalité virtuelle**.

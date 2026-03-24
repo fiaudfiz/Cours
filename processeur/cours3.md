@@ -2,6 +2,14 @@
 
 ---
 
+## Table des matières
+
+1. [Concepts Clés](#1-concepts-clés)
+2. [Les Ennemis](#2-les-3-types-daléas--les-ennemis)
+3. [Les Solutions](#3-les-solutions--comment-supprimer-les-stalls)
+
+---
+
 ## 1. Concepts Clés
 
 - **Pipeline** : l'autoroute du CPU. Technique qui permet de lancer une instruction avant que la précédente ne soit terminée — c'est du parallélisme au niveau des instructions.
