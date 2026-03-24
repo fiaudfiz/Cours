@@ -67,7 +67,7 @@ Exemple : PUSH_SWAP
 
 Contrairement aux tableaux déclarés comme int tab[10] (mémoire automatique), les listes utilisent la mémoire dynamique.
 
-Allocation : On utilise malloc. Cela réserve une place dans le Tas (Heap LIEN SYMBOLIQUE). Cette mémoire ne disparaît jamais toute seule.
+Allocation : On utilise malloc. Cela réserve une place dans le Tas ([Heap](https://github.com/fiaudfiz/Cours/tree/main/stack%20heap)). Cette mémoire ne disparaît jamais toute seule.
 Libération : Quand on supprime un élément, il faut faire un free(). Si on ne le fait pas, le programme consomme de plus en plus de RAM jusqu'au plantage : c'est la fuite mémoire (Memory Leak LIEN SYMBOLIQUE).
 
 Le Segfault : C'est l'erreur n°1. Elle arrive quand tu essaies d'accéder à node->next alors que node est déjà NULL.

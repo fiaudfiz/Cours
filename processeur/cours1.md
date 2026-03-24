@@ -1,72 +1,69 @@
-# Cours sur le processeur
-
-## Module 1 : L'Infrastructure Physique du Calcul
+# Module 1 — L'Infrastructure Physique du Calcul
 
 Pour qu'un ordinateur exécute du code, il doit convertir de l'énergie (électrons) en logique (mathématiques). Cette transformation repose sur un rythme et une structure précise.
 
-### 1. Le Rythme : L'Horloge (Clock)
+---
+
+## 1. Le Rythme : L'Horloge *(Clock)*
 
 Le processeur ne travaille pas en continu, mais par "sauts". L'horloge est un composant qui génère un signal électrique oscillant.
 
-Le **Signal** : Une alternance entre une tension basse (0) et une tension haute (1).
+- **Signal** : une alternance entre une tension basse (`0`) et une tension haute (`1`).
+- **Battement** *(front montant)* : le moment précis où le signal passe de `0` à `1`. C'est ce signal qui déclenche le mouvement des données dans tous les circuits simultanément.
+- **Fréquence** : le nombre de battements par seconde, mesuré en Hertz (Hz).
+  - `1 Hz` = 1 battement / seconde
+  - `3 GHz` = 3 milliards de battements / seconde
+- **Cycle** : l'intervalle de temps entre deux battements. Sur un CPU à 3 GHz, un cycle dure **0,33 nanoseconde** — c'est le temps qu'a le courant pour traverser les circuits avant le prochain battement. C'est la **limite de vitesse absolue** de la machine.
 
-Le "Top" (ou **Battement**) : C'est le moment précis où le signal passe de 0 à 1 (le front montant). C'est ce signal qui déclenche le mouvement des données dans tous les circuits en même temps.
+---
 
-La **Fréquence** : Le nombre de **Battements** par seconde, mesuré en Hertz (Hz).
+## 2. La Matière : Le Transistor
 
-1 Hz = 1 battement / seconde.
-3 GHz = 3 milliards de battements / seconde.
+C'est l'unité de base de l'intelligence matérielle. Gravés sur une plaque de silicium, ils sont **plusieurs milliards** dans un processeur moderne.
 
-Le **Cycle** : C'est l'intervalle de temps entre deux **Battements**.
+- **Définition** : un interrupteur microscopique sans partie mécanique, contrôlé par une tension électrique.
+- **Logique binaire** :
+  - Courant passe → `1` (Vrai)
+  - Courant bloqué → `0` (Faux)
+- **Portes logiques** : en combinant quelques transistors, on crée des portes (`AND`, `OR`, `NOT`) qui permettent de réaliser des additions ou des comparaisons.
 
-Sur un CPU à 3 GHz, un cycle dure 0,33 nanoseconde. C'est le temps qu'a le courant électrique pour traverser les circuits avant le prochain **battement**. C'est la limite de vitesse absolue de la machine.
+---
 
+## 3. L'Organisation : Le Modèle de Von Neumann *(1945)*
 
-### 2. La Matière : Le Transistor
+Presque tous les ordinateurs (PC, smartphones) utilisent cette structure. Elle repose sur la **séparation du calcul et du stockage**, reliés par des **bus** (autoroutes de données).
 
-C'est l'unité de base de l'intelligence matérielle. Gravés sur une plaque de silicium, ils sont plusieurs milliards dans un processeur moderne.
+| Composant | Rôle |
+| :--- | :--- |
+| **CPU** *(Central Processing Unit)* | Le cerveau. Traite les instructions les unes après les autres. |
+| **RAM** *(Mémoire)* | L'entrepôt. Instructions du programme et variables sont stockées **au même endroit**, sous forme de nombres. |
+| **I/O** *(Entrées / Sorties)* | Clavier, disque dur, écran, réseau. |
 
-Définition : Un interrupteur microscopique sans partie mécanique, contrôlé par une tension électrique.
+> **Goulot d'étranglement** : le CPU est des centaines de fois plus rapide que la RAM. L'un des plus grands défis de l'informatique est d'éviter que le CPU reste "les bras croisés" à attendre ses données.
 
-Logique Binaire :
+---
 
--Courant passe = 1 (Vrai).
--Courant bloqué = 0 (Faux).
-
-**Portes Logiques** : En combinant quelques transistors, on crée des portes (AND, OR, NOT) qui permettent de réaliser des additions ou des comparaisons.
-
-### 3. L'Organisation : Le Modèle de Von Neumann (1945)
-
-Presque tous les ordinateurs (PC, Smartphones) utilisent cette structure. Elle repose sur la séparation du calcul et du stockage, reliés par des **Bus** (autoroutes de données).
-
-Le **CPU** (Central Processing Unit) : Le cerveau. Il ne sait que traiter des instructions les unes après les autres.
-
-La Mémoire (RAM) : L'entrepôt. Point capital : Dans ce modèle, les instructions du programme et les variables sont stockées au même endroit, sous forme de nombres.
-
-Les Entrées/Sorties (I/O) : Clavier, disque dur, écran, réseau.
-
-Attention - Le Goulot d'étranglement : Le CPU est des centaines de fois plus rapide que la RAM. L'un des plus grands défis de l'informatique est d'éviter que le CPU ne reste "les bras croisés" à attendre que la RAM lui envoie des données.
-
-### 4. Anatomie Interne du CPU
+## 4. Anatomie Interne du CPU
 
 Le processeur est divisé en deux zones qui communiquent en permanence.
 
-#### 4.1 Le Chemin de Données (Datapath) : "L'Atelier"
+### 4.1 Le Chemin de Données *(Datapath)* — "L'Atelier"
 
-C'est ici que l'on manipule la matière. Il contient :
+C'est ici que l'on manipule la matière.
 
-L'**UAL** (Unité Arithmétique et Logique) : La calculatrice. Elle prend deux valeurs, applique une opération (addition, multiplication, comparaison bit à bit) et renvoie le résultat.
+- **UAL** *(Unité Arithmétique et Logique)* : la calculatrice du CPU. Elle prend deux valeurs, applique une opération (addition, multiplication, comparaison bit à bit) et renvoie le résultat.
+- **Registres** : des cases mémoire situées **à l'intérieur du CPU**, sur le même circuit que l'UAL.
+  - Très peu nombreux (ex. : 16 ou 32 registres sur un processeur x86-64).
+  - **Différence avec la [Stack](https://github.com/fiaudfiz/Cours/tree/main/stack%20heap)** : la [Stack](https://github.com/fiaudfiz/Cours/tree/main/stack%20heap)) se trouve en **RAM**. Les registres sont encore plus proches et plus rapides.
+  - Un accès registre → **1 cycle**. Un accès RAM (même la stack) → **des dizaines de cycles**.
 
-Les **Registres** :
+### 4.2 L'Unité de Contrôle *(Control Unit)* — "Le Contremaître"
 
-Les registres sont des cases mémoire à l'intérieur du CPU, sur le même circuit que l'UAL.
+Elle ne calcule rien — elle **dirige**.
 
-Il y en a très peu (ex: 16 ou 32 registres sur un processeur x86-64).
-Différence avec la **Stack** : La **Stack** LIEN SYMBOLIQUE se trouve dans la **RAM**. Les registres sont encore plus proches et plus rapides que la **Stack**. Un accès **registre** prend 1 **cycle**, un accès **RAM** (même la **stack**) peut en prendre des dizaines.
+1. Elle va chercher l'instruction en RAM.
+2. Elle la décode.
+3. Elle envoie les ordres électriques aux composants :
+   > *"Registre A, envoie ta valeur à l'UAL. Registre B, fais de même. UAL, additionne-les !"*
 
-#### 4.2 L'Unité de Contrôle (Control Unit) : "Le Contremaître"
-
-Elle ne calcule rien, elle dirige.
-Elle va chercher l'instruction en RAM.
-Elle la décode.
-Elle envoie les ordres électriques : "Registre A, envoie ta valeur à l'UAL. Registre B, fais de même. UAL, additionne-les !".
+---

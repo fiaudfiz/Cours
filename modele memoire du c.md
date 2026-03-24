@@ -25,7 +25,7 @@ int compteur;            /* BSS — vaut 0 au démarrage, garanti */
 static int tampon[1024]; /* BSS — 4096 octets zeroed, pas dans le binaire */
 ```
 
-### Heap
+### [Heap](https://github.com/fiaudfiz/Cours/tree/main/stack%20heap)
 
     la memoire allouee dynamiquement via malloc/calloc/realloc.Tout malloc doit etre free quand on en a plus besoin.
 
@@ -38,7 +38,7 @@ free(p);                            /* fin de vie explicite */
 p = NULL;                           /* bonne pratique : évite le double-free */\
 ```
 
-### Stack 
+### [Stack](https://github.com/fiaudfiz/Cours/tree/main/stack%20heap) 
 
     les varaibles locales, les parametres de fonctions, les adresses de retour.Geree automatiquement: chaque appel de fonction empile une stack frame, chaque retour la depile.C'est la que vit l'essentiel du code au debut.
 

@@ -1,67 +1,80 @@
-## Module 4 : La Hiérarchie Mémoire (Memory Hierarchy)
+# Module 4 — La Hiérarchie Mémoire *(Memory Hierarchy)*
 
-### 1. Le Problème : Le "Memory Wall"
+---
 
-Le **CPU** va des centaines de fois plus vite que **RAM**. Pour ne pas que le **CPU** passe sa vie à attendre ses données, on utilise une structure en pyramide.
+## 1. Le Problème : Le "Memory Wall"
 
-### 2. La Pyramide des Caches (Du plus rapide au plus lent)
+Le **CPU** va des centaines de fois plus vite que la **RAM**. Pour éviter que le CPU passe sa vie à attendre ses données, on utilise une structure en pyramide appelée **hiérarchie mémoire**.
 
-Niveau	Emplacement	Capacité (env.)	Latence (cycles)
+---
 
-Registres	Dans le cœur CPU	~1 Ko	0 cycle
-Cache L1	Collé au cœur	32 - 64 Ko	~4 cycles
-Cache L2	Proche du cœur	256 - 512 Ko	~12 cycles
-Cache L3	Partagé (tous cœurs)	8 - 64 Mo	~40 cycles
-RAM	Barrette externe	16 - 64 Go	~200+ cycles
+## 2. La Pyramide des Caches
 
+> Du plus rapide au plus lent.
 
+| Niveau | Emplacement | Capacité | Latence |
+| :--- | :--- | :--- | ---: |
+| **Registres** | Dans le cœur CPU | ~1 Ko | 0 cycle |
+| **Cache L1** | Collé au cœur | 32 – 64 Ko | ~4 cycles |
+| **Cache L2** | Proche du cœur | 256 – 512 Ko | ~12 cycles |
+| **Cache L3** | Partagé (tous cœurs) | 8 – 64 Mo | ~40 cycles |
+| **RAM** | Barrette externe | 16 – 64 Go | ~200+ cycles |
 
+<!-- Schéma : pyramide des niveaux de cache (source à ajouter) -->
 
->| NOM | Localisation | Taille | Cycles |
->| :--- | :--- | :--- | :--- |
->| **Registres** | Dans le coeur CPU | ~1 Ko | 0 cycle |
->| **Cache L1** | Collé au cœur | 32 - 64 Ko | ~4 cycles |
->| **Cache L2** | Proche du coeur | 256 - 512 Ko | ~12 cycles |
->| **Cache L3** | Partagé (tous cœurs) | 8 - 64 Mo | ~40 cycles |
->| **RAM**	    | Barrette externe	| 16 - 64 Go | ~200+ cycles |
+---
 
+## 3. Mécanisme : Cache Hit vs Cache Miss
 
-Shutterstock
+Le CPU ne communique jamais directement avec la RAM s'il peut l'éviter. À chaque accès mémoire, deux cas se présentent :
 
+- **Cache Hit** — La donnée est trouvée dans l'un des caches. Le CPU continue à pleine vitesse.
+- **Cache Miss** — La donnée est absente des caches. Le CPU doit **caler** (*Stall*) et attendre que la donnée remonte de la RAM.
 
-3. Mécanisme : Cache Hit vs Cache Miss
+---
 
-Le CPU ne parle jamais directement à la RAM s'il peut l'éviter.
+## 4. Le Principe de Localité
 
-    Cache Hit (Succès) : La donnée est trouvée dans l'un des caches. Le CPU continue à pleine vitesse.
+Le succès d'un programme repose sur deux comportements que le cache exploite naturellement.
 
-    Cache Miss (Échec) : La donnée n'est nulle part dans les caches. Le CPU doit "caler" (Stall) et attendre que la donnée remonte de la RAM.
+### A. Localité Temporelle — *Le "Déjà-vu"*
 
-4. Le Principe de Localité (Comment le cache anticipe)
+- **Concept** : une donnée récemment utilisée a de fortes chances d'être réutilisée très bientôt.
+- **Exemples typiques** : compteurs de boucle (`i`, `j`), accumulateurs de somme.
+- **Gestion** : le cache conserve la donnée au chaud. Si le cache est plein, l'algorithme **LRU** (*Least Recently Used*) évince la donnée la plus ancienne pour libérer de la place.
 
-Le succès d'un programme repose sur deux comportements que le cache exploite :
-A. Localité Temporelle (Le "Déjà-vu")
+### B. Localité Spatiale — *Le "Voisinage" / Cache Line*
 
-    Concept : Si une donnée est utilisée, elle a de fortes chances d'être réutilisée très bientôt.
+- **Concept** : si on accède à l'adresse `X`, on accédera probablement à `X+1`, `X+2`...
+- **L'unité de transfert — la Cache Line** : le CPU ne déplace jamais moins de **64 octets** à la fois entre la RAM et le cache.
+- **Exemple concret** : demander un `int` (4 octets) à `tab[0]` provoque le chargement des 64 octets suivants en cache L1. Les éléments `tab[0]` à `tab[15]` sont disponibles instantanément — les 15 suivants sont **"gratuits"**.
 
-    Application : Les compteurs de boucles (i, j), les accumulateurs de somme.
+---
 
-    Gestion : Le cache garde la donnée au chaud. Si le cache est plein, il utilise l'algorithme LRU (Least Recently Used) : il évince la donnée la plus ancienne pour faire de la place.
+## 5. Cas d'École : Parcours de Matrice
 
-B. Localité Spatiale (Le "Voisinage" / Cache Line)
+Une matrice `int matrix[10000][10000]` est stockée de façon **contiguë** en RAM, **ligne par ligne** (*row-major order*).
 
-    Concept : Si on accède à une adresse X, on accédera probablement à X+1,X+2...
+### Parcours par ligne — Rapide
 
-    L'Unité de transfert : La Cache Line. Le CPU ne déplace jamais moins de 64 octets à la fois entre la RAM et le cache.
+```c
+for (int i = 0; i < N; i++)
+    for (int j = 0; j < N; j++)
+        sum += matrix[i][j]; // accès contigu en mémoire
+```
 
-    Exemple : Si tu demandes un int (4 octets) à l'index tab[0], le CPU charge en réalité les 64 octets suivants. Tu reçois donc tab[0] à tab[15] dans ton cache L1 instantanément. Les 15 suivants sont "gratuits".
+On profite pleinement de la Cache Line : **1 Cache Miss pour 16 accès**.
 
-5. Cas d'école : Le parcours de Matrice
+### Parcours par colonne — Lent
 
-Une matrice int matrix[10000][10000] est stockée de manière contiguë (en un seul bloc) en RAM, ligne par ligne (Row-major order).
+```c
+for (int j = 0; j < N; j++)
+    for (int i = 0; i < N; i++)
+        sum += matrix[i][j]; // saute 40 000 octets à chaque fois
+```
 
-    Parcours par Ligne (Rapide) : En lisant matrix[0][0] puis matrix[0][1], tu profites de la Cache Line. Tu as 1 Cache Miss pour 16 accès.
+On tombe systématiquement en dehors de la Cache Line courante : **100% de Cache Miss**.
 
-    Parcours par Colonne (Lent) : En lisant matrix[0][0] puis matrix[1][0], tu sautes de 40 000 octets en RAM à chaque fois. Tu tombes systématiquement en dehors de la Cache Line actuelle.
+> **Résultat** : le parcours par colonne peut être **10 à 50× plus lent** que le parcours par ligne, à code identique.
 
-    Résultat : 100% de Cache Miss. Le code peut être 10 à 50 fois plus lent.
+---
