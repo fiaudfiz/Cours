@@ -78,16 +78,3 @@ Un processus **Zombie** est un fils qui a terminé (`exit`), mais dont le père 
 Si le père meurt avant le fils, le fils devient un **Orphelin**. Il est automatiquement adopté par le processus `init` *(PID 1)*, qui se chargera d'appeler `wait()` à sa place.
 
 ---
-
-## 6. Application dans Pipex
-
-`fork()` permet à chaque commande (`cmd1`, `cmd2`) de s'exécuter dans son propre espace mémoire.
-
-```
-1. Le Père crée le pipe.
-2. Le Père fork → premier fils  (exécute cmd1).
-3. Le Père fork → deuxième fils (exécute cmd2).
-4. Le Père ferme ses pipes et attend ses deux fils avec waitpid.
-```
-
----
