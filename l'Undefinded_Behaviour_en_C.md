@@ -4,6 +4,12 @@
 
 ## Tables des Matieres
 
+1. [Definition](#1-definition)
+2. [L'Overflow Signe](#2-loverflow-signe)
+3. [Le debordement de tableau](#3-le-debordement-de-tableau-out-of-bounds)
+4. [Le comportement du compilateur face a l'Undefined Behavior](#4-le-comportement-du-compilateur-face-a-lub)
+5. [Schéma des passes d'optimisation](#schéma-des-passes-doptimisation)
+6. [Résumé conceptuel](#résumé-conceptuel)
 
 ---
 
@@ -125,7 +131,7 @@ int foo(int *p) {
 
 Ce pattern — vérification de nullité **après** déréférencement — a causé des failles de sécurité réelles dans le noyau Linux.
 
-### Schéma des passes d'optimisation
+### 5. Schéma des passes d'optimisation
 ```
 Code source C99
        │
@@ -171,7 +177,7 @@ clang -fsanitize=undefined,address -g mon_programme.c
 
 ---
 
-## Résumé conceptuel
+## 6. Résumé conceptuel
 ```
        Le standard C99 dit :
        "Si UB → aucune garantie"

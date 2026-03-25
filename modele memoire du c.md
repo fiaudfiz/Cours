@@ -1,6 +1,17 @@
 # Modele Memoire du C
 
-## Les cinqs regions et leurs duree de vie
+---
+
+## Tables des Matieres
+
+1. [Les cinqs regions et leurs duree de vie](#1-les-cinqs-regions-et-leurs-duree-de-vie)
+2. [La duree de vie](#2-la-duree-de-vie---le-concept-central)
+3. [Les Sequences points](#3-les-sequences-points)
+4. [L'effectif type](#4-leffectif-type---ce-qui-fonde-le-script-aliasing)
+
+---
+
+## 1. Les cinqs regions et leurs duree de vie
 
 ### Texte
 
@@ -43,7 +54,7 @@ p = NULL;                           /* bonne pratique : évite le double-free */
     les varaibles locales, les parametres de fonctions, les adresses de retour.Geree automatiquement: chaque appel de fonction empile une stack frame, chaque retour la depile.C'est la que vit l'essentiel du code au debut.
 
 
-## La duree de vie - le concept central
+## 2. La duree de vie - le concept central
 
 C99 introduit le terme lifetime : la periode pendant laquelle un objet est garanti d'exister en memoire.Acceder a un objet en dehors de sa duree de vie est un comportement indefini.
 
@@ -71,7 +82,7 @@ int *p = malloc(sizeof(int));  /* storage duration: allocated */
 free(p);   /* fin de vie explicite */
 ```
 
-## Les Sequences points
+## 3. Les Sequences points
 
 C99 dit : entre 2 sequence points, un objet ne doit etre modifie qu'une seule fois, et sa valeur ne doit etre lue que pour determiner la nouvelle valeur a lui ecrire.Toute violation est UB.
 Un sequence point est un point dans l'execution ou tous les effets de bord precedents sont garantis termines.
@@ -117,7 +128,7 @@ if (p != NULL & *p > 0)   /* NE PAS FAIRE */
     printf("crash possible\n");
 ```
 
-## L'effectif type - ce qui fonde le script aliasing
+## 4. L'effectif type - ce qui fonde le script aliasing
 
 C99 dit : chaque objet en memoire a un effectif type, et on ne peut y acceder qu'avec une expression de type compatible.
 Pour la memoire statique et automatiquem l'effectif type est le type declare- simple :
