@@ -1,4 +1,4 @@
-# Le Comportement Indefini (Undefined Behavior) en C99
+# M2 — Undefined Behavior
 
 ---
 
