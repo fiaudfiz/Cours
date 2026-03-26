@@ -1,4 +1,4 @@
-# COURS COMPLET : LES LISTES CHAÎNÉES (Linked Lists)
+# Les Listes Chainees (Linked Lists)
 
 ## 1. La Philosophie : Pourquoi ça existe ?
 
