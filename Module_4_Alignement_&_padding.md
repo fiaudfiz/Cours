@@ -7,6 +7,9 @@
 1. [sizeof et offsetof](#1-sizeof-et-offsetof)
 2. [`__attribute__((packed))`](#2-__attribute__packed)
 3. [Impact sur le cache L1](#3-impact-sur-le-cache-l1)
+4. [Impact sur la vectorisation AVX2](#4-impact-sur-la-vectorisation-avx2)
+5. [Mesurer avec `pahole`](#5-mesurer-avec-pahole)
+6. [Alternative sans `pahole`](#6-alternative-sans-pahole---wpadded)
 
 ---
 
