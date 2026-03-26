@@ -1,4 +1,4 @@
-# Référence — Tailles des Types C
+# Tailles des Types C
 
 > Architecture **x86_64** — Linux — Norme 42
 > Les tailles et alignements dépendent de l'ABI.
