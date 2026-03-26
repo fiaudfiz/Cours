@@ -79,7 +79,7 @@ arr[-1] = 42; /* UB */
 
 Pourquoi il n'y aura pas un segfault systématique ?
 
-Le segfault est un effet possible de l'UB, mais pas le seul. L'adresse `arr[5]` est souvent une adresse mémoire **valide** (stack, heap, segments de données adjacents). L'accès réussit silencieusement, corrompt une autre variable, et le programme plante bien plus loin — ou pire, continue de fonctionner avec des données corrompues.
+Le segfault est un effet possible de l'UB, mais pas le seul. L'adresse `arr[5]` est souvent une adresse mémoire **valide** ([stack](https://github.com/fiaudfiz/Cours/blob/main/stack%20heap/stack%20heap.md), [heap](https://github.com/fiaudfiz/Cours/blob/main/stack%20heap/stack%20heap.md), segments de données adjacents). L'accès réussit silencieusement, corrompt une autre variable, et le programme plante bien plus loin — ou pire, continue de fonctionner avec des données corrompues.
 
 ```c
 int arr[5] = {0};

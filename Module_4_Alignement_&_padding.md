@@ -1,11 +1,12 @@
 # M4 — Alignement & padding
 
-Ce cours sera complété par 2 autres cours (un cours sur les tailles des types et l'autre qui parle un peu de padding).
-
 ---
 
 ## Table des Matières
 
+1. [sizeof et offsetof](#1-sizeof-et-offsetof)
+2. [`__attribute__((packed))`](#2-__attribute__packed)
+3. [Impact sur le cache L1](#3-impact-sur-le-cache-l1)
 
 ---
 
@@ -17,7 +18,7 @@ Si l'adresse n'est pas alignée, 2 cas selon l'architecture :
 
 Le compilateur évite ce problème en insérant du padding : des octets de rembourrage invisibles dans les structs.
 
-## sizeof et offsetof
+## 1. sizeof et offsetof
 
 ```c
 #include <stddef.h>
@@ -50,7 +51,7 @@ printf("%zu\n", offsetof(struct Exemple, c));  /* 8  */
 
 L'alignement d'une struct est celui de son membre le plus grand. La taille totale de la struct est un multiple de cet alignement.
 
-## `__attribute__((packed))`
+## 2. `__attribute__((packed))`
 
 GCC/Clang permettent de forcer une struct sans padding :
 ```c
@@ -79,9 +80,9 @@ memcpy(&val, buffer + offset, sizeof(val));
 val = ntohl(val);  /* conversion endianness si réseau */
 ```
 
-## Impact sur le cache L1
+## 3. Impact sur le [cache L1](https://github.com/fiaudfiz/Cours/blob/main/processeur/cours4.md)
 
-Le **cache L1** travaille par **cache lines** de 64 octets sur x86-64 moderne. Quand on veut accéder à une adresse, le CPU charge les 64 octets contigus autour de cette adresse, qu'on en ait besoin ou non.
+Le [**cache L1**](https://github.com/fiaudfiz/Cours/blob/main/processeur/cours4.md) travaille par **cache lines** de 64 octets sur x86-64 moderne. Quand on veut accéder à une adresse, le [CPU](https://github.com/fiaudfiz/Cours/blob/main/processeur/cours1.md) charge les 64 octets contigus autour de cette adresse, qu'on en ait besoin ou non.
 
 ### False sharing
 
@@ -108,9 +109,9 @@ struct {
 
 Une struct qui tient dans 1 ou 2 cache lines est chargée en 1 ou 2 accès. Une struct avec beaucoup de padding ou de pointeurs vers d'autres zones mémoire génère des **caches misses** en cascade (pointer chasing). C'est la différence entre un tableau de structs compacts (cache-friendly) et un tableau de pointeurs vers des structs éparpillées en heap.
 
-## Impact sur la vectorisation AVX2
+## 4. Impact sur la vectorisation AVX2
 
-AVX2 opère sur des registres 256 bits. Pour qu'une boucle soit auto-vectorisée, le compilateur doit être capable de charger plusieurs éléments contigus en une instruction.
+AVX2 opère sur des [registres](https://github.com/fiaudfiz/Cours/blob/main/processeur/cours4.md) 256 bits. Pour qu'une boucle soit auto-vectorisée, le compilateur doit être capable de charger plusieurs éléments contigus en une instruction.
 ```c
 /* Vectorisable : floats contigus, pas de padding */
 float tab[256];
@@ -150,7 +151,7 @@ float *buf = aligned_alloc(32, N * sizeof(float));  /* aligné sur 32 octets */
 float buf[N] __attribute__((aligned(32)));
 ```
 
-## Mesurer avec `pahole`
+## 5. Mesurer avec `pahole`
 
 `pahole` est un outil qui lit les informations de debug DWARF dans le binaire et affiche la disposition **réelle** des structs, avec padding explicitement indiqué.
 
@@ -192,7 +193,7 @@ pahole --reorganize mon_programme     /* suggérer un réordonnancement optimal 
 
 `--reorganize` est particulièrement utile : il sort la version réorganisée de la struct sans qu'on ait à le faire à la main.
 
-## Alternative sans `pahole` : `-Wpadded`
+## 6. Alternative sans `pahole` : `-Wpadded`
 
 GCC et Clang ont un warning qui signale le padding à la compilation :
 ```makefile

@@ -56,7 +56,7 @@ Les variables locales, les paramètres de fonctions, les adresses de retour. Gé
 
 ## 2. La durée de vie - le concept central
 
-C99 introduit le terme lifetime : la période pendant laquelle un objet est garanti d'exister en mémoire. Accéder à un objet en dehors de sa durée de vie est un comportement indéfini.
+C99 introduit le terme lifetime : la période pendant laquelle un objet est garanti d'exister en mémoire. Accéder à un objet en dehors de sa durée de vie est un [**comportement indéfini**](https://github.com/fiaudfiz/Cours/blob/main/Module_2_Undefined_Behavior.md).
 
 C99 introduit 3 durées de vie :
 

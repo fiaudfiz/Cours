@@ -22,8 +22,8 @@ Les différents Sanitizers présentés dans ce cours ne se remplacent pas mutuel
 ### ASan : AdressSanitizer
 
 Ce qu'il détecte :
-* **Heap** buffer overflow/underflow : on lit ou on écrit à côté d'un bloc **malloc**
-* **Stack** buffer overflow : on déborde d'un tableau local
+* [**Heap**](https://github.com/fiaudfiz/Cours/blob/main/stack%20heap/stack%20heap.md) buffer overflow/underflow : on lit ou on écrit à côté d'un bloc **malloc**
+* [**Stack**](https://github.com/fiaudfiz/Cours/blob/main/stack%20heap/stack%20heap.md) buffer overflow : on déborde d'un tableau local
 * Use-after-free : on déréférence un pointeur vers de la mémoire déjà libérée
 * Use-after-return : on retourne un pointeur vers une variable locale (**UB** classique)
 * Double-free : on appelle **free** 2 fois sur le même pointeur
