@@ -1,4 +1,4 @@
-# Alignement et Padding
+# M4 — Alignement & padding
 
 Ce cours sera complete par 2 autres cours (un cours sur les tailles des types et l'autre qui parle un peu de padding).
 
