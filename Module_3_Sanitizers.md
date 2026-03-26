@@ -1,4 +1,4 @@
-# Les Sanitizers
+# M3 — Sanitizers
 
 ---
 
