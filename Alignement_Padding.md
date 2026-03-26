@@ -19,7 +19,7 @@ Le compilateur evite ce probleme en inserant du padding : des octets de rembourr
 
 ## sizeof et offsetof
 
-```
+```c
 #include <stddef.h>
 
 struct Exemple {
@@ -30,7 +30,7 @@ struct Exemple {
 ```
 
 On pourrait croire que `sizeof(struct Exemple) == 6`. C'est faux.
-```
+```c
 Offset 0 : a     (1 octet)
 Offset 1 : [pad] (3 octets) ← le compilateur insère ici
 Offset 4 : b     (4 octets)
@@ -52,7 +52,7 @@ L'alignement d'une struct est celui de son membre le plus important.La taille to
 ## `__attribute__((packed))`
 
 GCC/Clang permettent de forcer une struct sans padding :
-```
+```c
 struct __attribute__((packed)) PackedEx {
     char  a;
     int   b;
@@ -72,7 +72,7 @@ Quand c'est utile :
 * `memcpy` interne pour acceder aux membres dans certains cas
 
 **Alternative propre** : utiliser `memcpy` explicitement pour extraire les champs d'un buffer brut, sans `packed` :
-```
+```c
 uint32_t val;
 memcpy(&val, buffer + offset, sizeof(val));
 val = ntohl(val);  // conversion endianness si réseau
@@ -85,7 +85,7 @@ Le **cache L1** travaille par **cache lines** de 64 octets sur x86-64 moderne.Qu
 ### False sharing
 
 Si 2 threads modifient des variables differentes qui se trouvent dans le meme **cache line**, le protocole de coherence cache (MESI) force une invalidation a chaque ecriture.Resultat : les threads se battent sur une ligne de cache alors qu'ils ne partagent aucune donnee logiquement.
-```
+```c
 // Problème : x et y dans la même cache line
 struct {
     int x;  // thread 1 écrit ici
@@ -110,7 +110,7 @@ Une struct qui tient dans 1 ou 2 cache lines est chargee en 1 ou 2 acces.Une str
 ## Impact sur la vectorisation AVX2
 
 AVX2 opere sur des registres 256 bits. Pour qu'une boucle soit auto-vectorisee, le compilateur doit etre capable de charger plusieurs elements contigus en une instruction.
-```
+```c
 // Vectorisable : float contigus, pas de padding
 float tab[256];
 for (int i = 0; i < 256; i++) tab[i] *= 2.0f;
@@ -125,7 +125,7 @@ for (int i = 0; i < 256; i++) pts[i].x *= 2.0f;
 
 La Solution Classique en calcul intensif est le SoA (Structure of Arrays) plutot que AoS (Arrays of Structure)
 
-```
+```c
 // AoS — mauvais pour la vectorisation
 struct Particule { float x, y, z, masse; };
 Particule particules[N];
@@ -155,17 +155,17 @@ float buf[N] __attribute__((aligned(32)));
 
 ### Compilation (debug info obligatoire)
 
-```
+```bash
 gcc -g -o mon_programme main.c
 ```
 ### Usage de base
 
-```
+```bash
 pahole mon_programme
 ```
 
 Sortie typique :
-```
+```c
 struct Mal {
     char    a;         /*  0     1 */
     /* 7 bytes hole */ /*  1     7 */
@@ -182,7 +182,7 @@ Chaque trou est rendu visible avec sa taille.La derniere ligne donne le bilan : 
 
 ### Options utiles
 
-```
+```bash
 pahole --show_paddings mon_programme       # filtrer uniquement les structs avec padding
 pahole -C Mal mon_programme               # afficher uniquement la struct 'Mal'
 pahole --reorganize mon_programme         # suggérer un réordonnancement optimal
@@ -193,7 +193,7 @@ pahole --reorganize mon_programme         # suggérer un réordonnancement optim
 ## Alternative sans `pahole` : `-Wpadded`
 
 GCC et Clang ont un warning qui signale le padding a la compilation :
-```
+```makefile
 CFLAGS += -Wpadded
 ```
 Il signale meme les cas intentionnels, mais c'est un outil super utile.

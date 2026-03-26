@@ -115,7 +115,7 @@ CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-rec
 LDFLAGS += -fsanitize=address,undefined
 ```
 
-### TSan : TheadSanitizer
+### TSan : ThreadSanitizer
 
 Ce qu'il detecte :
 * les data races : 2 threads accedent a la meme zone memoire, au moins un fait une ecriture, sans synchronisation.C'est de l'**UB** en C.TSan instrumente chaque acces memoire pour suivre quel thread a touche quoi, et quelles barrieres de synchronisation ont ete posees.
