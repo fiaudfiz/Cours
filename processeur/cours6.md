@@ -1,4 +1,4 @@
-# Module 6 — Mémoire Virtuelle, MMU & Système d'Exploitation
+# Module 6  sur le processeur — Mémoire Virtuelle, MMU & Système d'Exploitation
 
 ---
 

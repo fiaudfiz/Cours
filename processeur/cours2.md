@@ -1,4 +1,4 @@
-# Module 2 — L'Exécution : De la Syntaxe au Signal
+# Module 2 sur le processeur — L'Exécution : De la Syntaxe au Signal
 
 ---
 

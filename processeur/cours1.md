@@ -1,4 +1,4 @@
-# Module 1 — L'Infrastructure Physique du Calcul
+# Module 1 sur le processeur — L'Infrastructure Physique du Calcul
 
 ---
 

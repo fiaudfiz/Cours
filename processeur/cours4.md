@@ -1,4 +1,4 @@
-# Module 4 — La Hiérarchie Mémoire *(Memory Hierarchy)*
+# Module 4  sur le processeur — La Hiérarchie Mémoire *(Memory Hierarchy)*
 
 ---
 

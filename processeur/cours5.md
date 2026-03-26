@@ -1,4 +1,4 @@
-# Module 5 — Le Parallélisme de Données *(SIMD)*
+# Module 5  sur le processeur — Le Parallélisme de Données *(SIMD)*
 
 ---
 

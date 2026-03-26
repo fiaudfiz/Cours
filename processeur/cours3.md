@@ -1,4 +1,4 @@
-# Module 3 — Les Aléas du Pipeline *(Pipeline Hazards)*
+# Module 3 sur le processeur — Les Aléas du Pipeline *(Pipeline Hazards)*
 
 ---
 
