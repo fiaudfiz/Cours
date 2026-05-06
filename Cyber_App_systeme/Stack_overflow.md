@@ -21,6 +21,10 @@ L'espace virtuel est divise lui meme en 2 zones :
 
 Un processus user ne peut pas acceder a l'espace kernel mais l'inverse est possible.
 
-#### Espace User
+Un exécutable ELF est transformé en une image processus par le program loader. 
+Pour créer cette image en mémoire, le program loader va mapper en mémoire tous les loadable segments de l'exécutable et des librairies requises au moyen de l'appel système mmap(). Les exécutables sont chargés à l’adresse mémoire fixe 0x08048000 appelée « adresse de base ».
+
+La figure suivante indique les sections principales d'un programme en memoire.
+
 
 ![alt text](image.png)
