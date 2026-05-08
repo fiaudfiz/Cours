@@ -8,23 +8,17 @@
 
 Ce cours va s'appuyer sur cet article : 
 
-Les buffers overflows representent 60% des annonces de securites du CERT () de nos jours.Le buffer overflow est le vecteur d'attaque le plus courant dans les intrusions systemes et particulierement dans les attaques a distance.
+Le buffer overflow est le vecteur d'attaque le plus courant dans les intrusions systemes et particulierement dans les attaques a distance.
 Des estimations indiquent que pour 1000 lignes de code, il y a entre 5 et 15 erreurs, ce cours va detailler tout d'abord l'organisation memoire de la stack, les potentielles exploitations des failles et quelques conseils pour eviter l'exploitation des buffer overflows.
 
 ## ELF et memoire virtuelle
 
 memoire virtuelle : chaque programme quand il est execute obtient un espace memoire entierement isole.Sur une architecture x86 32 bits, l’espace adressable théorique est de 4 Go. Sur x86-64 moderne, l’espace virtuel est bien plus grand..Linux utilise pour les programmes executables le format ELF (Executable Linking Format) qui est compose de plusieurs sections.
 
-L'espace virtuel est divise lui meme en 2 zones :
-- l'espace user (0x0000000 -0xbfffffff)
-- l'espace kernel (0xc0000000 - 0xfffffff)
-
-Un processus user ne peut pas acceder a l'espace kernel mais l'inverse est possible.
-
 Un exécutable ELF est transformé en une image processus par le program loader. 
 Pour créer cette image en mémoire, le program loader va mapper en mémoire tous les loadable segments de l'exécutable et des librairies requises au moyen de l'appel système mmap(). Historiquement sans PIE, les binaires étaient souvent chargés à des adresses fixes comme 0x08048000. Aujourd’hui, avec PIE + ASLR, ces adresses sont souvent randomisées.
 
-La figure suivante indique les sections principales d'un programme en memoire.La section .txt represente le code du programme.Dans la section .data sont placees les variables globales initialisees (elles sont connues a la compilation) et dans la section .bss les variables globales non-initialisees.
+La figure suivante indique les sections principales d'un programme en memoire.La section .text represente le code du programme.Dans la section .data sont placees les variables globales initialisees (elles sont connues a la compilation) et dans la section .bss les variables globales non-initialisees.
 
 La stack contient les variables locales automatiques (une variable locale est automatique).Elle fonctionne sur le principe LIFO, et la stack croit vers les adresses basses, cad on commence par ex a 0xc0000000 et apres on decsend a ..... .A l'execution d'un programme, les arguments ainsi que les variables d'env sont egalement stockees dans la pile.Et les variables allouees dynamiquement (malloc, calloc...) sont stockees dans la heap. (les adresses croissent)
 
@@ -39,7 +33,7 @@ char var2[] = "buf1";           // data
 int main()
 {
     static int var3;                // bss
-    char *var4                      // stack
+    char *var4;                     // stack
     char *var5 = malloc(32);        // heap
     static char var6[] = "buf2";    // data
 }
@@ -109,9 +103,32 @@ Extended Base Pointer : c'est le point de repere fixe de la fonction, il permet 
 
 ### appel de la fonction
 
+Pour appeler une fonction en assembleur, il faut utiliser l'instruction call :
+```asm
+   0x000000000040047a <+32>:       call   0x400446 <add> 
+```
+l'instruction call sauvegarde l'endroit ou on s'arrete dans le code pour pouvoir y revenir apres.Elle stocke cet endroit dans le registre %eip (RIP).
+
 #### Prologue de la fonction
 
+Le prologue d'une fonction correspond aux premieres instructions executees dans la fonction.
+```asm
+   0x0000000000400446 <+0>:	push   %rbp
+   0x0000000000400447 <+1>:	mov    %rsp,%rbp
+```
+
+On enregistre en premier le frame pointer car c'est celui de la fonction d'ou l'on vient, ici le main.Quand on sortira de la fonction, il pourra etre remis a sa valeur d'origine.
+Ensuite, on met a jour le registre RSP pour le mettre au debut de la stack mais de la fonction, plus du programme.
+
 #### Epilogue de la fonction
+
+l'Epilogue d'une fonction correspond a la sortie de la fonction. Elle doit alors retourner au bon endroit et remettre le frame pointer sauvegarde au debut de la fonction.
+L'Epilogue est effectue par ces 2 instructions:
+```asm
+   0x0000000000400458 <+18>:	pop    %rbp
+   0x0000000000400459 <+19>:	ret
+```
+Ici on supprime le repere de la fonction et apres on remettra l'ancien de la fonction d'origine puis on retourne.
 
 #### Rapport avec les buffers overflows
 
