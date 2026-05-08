@@ -187,3 +187,6 @@ Le code a ete executee sur une machine x86-64, donc après le buffer on trouve g
 ### PIE
 
 ### RELRO
+
+
+## Exploitation moderne d'un stack overflow
