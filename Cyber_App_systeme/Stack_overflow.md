@@ -170,7 +170,20 @@ ici nous ouvrons avec gdb le coredump de cet executable apres l'avoir execute:
                 ELF object binary architecture: AMD x86-64
 ```
 
-Nous voyons bien que l'adresse #1 a ete modifie en 0x4141414141414141 ce qui signifie "AAAAAAAA".La ligne #0 nous indique a quel endroit du programme on etait lorsque le segfault a ete recu.Nous avons bien modifie l'adresse de retour par "AAAAAAAA", et cette adresse ne mene nulle part ici, mais quelqu'un peut tres bien injecter une adresse valide d'un autre code ou pour ouvrir un shell.
+Nous voyons bien que l'adresse #1 a ete modifie en 0x4141414141414141 ce qui signifie "AAAAAAAA".La ligne #0 nous indique a quel endroit du programme on etait lorsque le segfault a ete recu.Nous avons bien modifie l'adresse de retour par "AAAAAAAA", et cette adresse ne mene nulle part ici, mais historiquement on injectait souvent du shellcode directement dans la stack. Aujourd’hui cela est souvent bloqué par NX, donc les attaquants utilisent davantage ret2libc ou ROP.
 
 Il faut neanmoins savoir que pour faire crasher ce programme, il faut rentrer une valeur >= 264, et non 256, mais pourquoi ?
-Le code a ete executee sur une machine x86-64, donc apres le buffer, on trouve d'abord le RIP (8 octets), puis l'adresse de retour (8 octets).Des que on va commencer a toucher a l'adresse de retour, le programme va crasher donc ici 256 + 8 = 264.
+Le code a ete executee sur une machine x86-64, donc après le buffer on trouve généralement le saved RBP (8 octets), puis l’adresse de retour (8 octets) qui sera chargée dans RIP lors du retour de fonction.Des que on va commencer a toucher a l'adresse de retour, le programme va crasher donc ici 256 + 8 = 264.
+
+
+## Protections modernes contre les stack overflows
+
+### Stack Canary
+
+### NX
+
+### ASLR
+
+### PIE
+
+### RELRO
