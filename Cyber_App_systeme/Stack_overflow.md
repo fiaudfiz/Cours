@@ -13,7 +13,7 @@ Des estimations indiquent que pour 1000 lignes de code, il y a entre 5 et 15 err
 
 ## ELF et memoire virtuelle
 
-memoire virtuelle : chaque programme quand il est execute obtient un espace memoire entierement isole.la memoire est adresse par mots (4 octets) et elle commence a l'adresse 0x00000000  et finit a l'adresse 0xffffffff , soit 4 Go adressables.Linux utilise pour les programmes executables le format ELF (Executable Linking Format) qui est compose de plusieurs sections.
+memoire virtuelle : chaque programme quand il est execute obtient un espace memoire entierement isole.Sur une architecture x86 32 bits, l’espace adressable théorique est de 4 Go. Sur x86-64 moderne, l’espace virtuel est bien plus grand..Linux utilise pour les programmes executables le format ELF (Executable Linking Format) qui est compose de plusieurs sections.
 
 L'espace virtuel est divise lui meme en 2 zones :
 - l'espace user (0x0000000 -0xbfffffff)
@@ -22,7 +22,7 @@ L'espace virtuel est divise lui meme en 2 zones :
 Un processus user ne peut pas acceder a l'espace kernel mais l'inverse est possible.
 
 Un exécutable ELF est transformé en une image processus par le program loader. 
-Pour créer cette image en mémoire, le program loader va mapper en mémoire tous les loadable segments de l'exécutable et des librairies requises au moyen de l'appel système mmap(). Les exécutables sont chargés à l’adresse mémoire fixe 0x08048000 appelée « adresse de base ».
+Pour créer cette image en mémoire, le program loader va mapper en mémoire tous les loadable segments de l'exécutable et des librairies requises au moyen de l'appel système mmap(). Historiquement sans PIE, les binaires étaient souvent chargés à des adresses fixes comme 0x08048000. Aujourd’hui, avec PIE + ASLR, ces adresses sont souvent randomisées.
 
 La figure suivante indique les sections principales d'un programme en memoire.La section .txt represente le code du programme.Dans la section .data sont placees les variables globales initialisees (elles sont connues a la compilation) et dans la section .bss les variables globales non-initialisees.
 
@@ -48,34 +48,39 @@ int main()
 La commande size permet de connaitre les differentes sections d'un programme ELF et de leur adresse memoire
 
 ```bash
-section size addr
-.interp 0x13 0x80480f4
-.note.ABI-tag 0x20 0x8048108
-.hash 0x258 0x8048128
-.dynsym 0x510 0x8048380
-.dynstr 0x36b 0x8048890
-8/92
-.gnu.version 0xa2 0x8048bfc
-.gnu.version_r 0x80 0x8048ca0
-.rel.got 0x10 0x8048d20
-.rel.bss 0x28 0x8048d30
-.rel.plt 0x230 0x8048d58
-.init 0x25 0x8048f88
-.plt 0x470 0x8048fb0
-.text 0x603c 0x8049420
-.fini 0x1c 0x804f45c
-.rodata 0x2f3c 0x804f480
-.data 0xbc 0x80533bc
-.eh_frame 0x4 0x8053478
-.ctors 0x8 0x805347c
-.dtors 0x8 0x8053484
-.got 0x12c 0x805348c
-.dynamic 0xa8 0x80535b8
-.sbss 0x0 0x8053660
-.bss 0x2a8 0x8053660
-.comment 0x3dc 0x0
-.note 0x208 0x0
-Total 0xade9
+➜  size -A -x a.out
+
+section                  size       addr
+.note.gnu.build-id       0x24   0x400318
+.init                    0x1b   0x40033c
+.plt                     0x20   0x400360
+.text                   0x12f   0x400380
+.fini                     0xd   0x4004b0
+.interp                  0x1c   0x401000
+.gnu.hash                0x1c   0x401020
+.dynsym                  0x60   0x401040
+.dynstr                  0x4a   0x4010a0
+.gnu.version              0x8   0x4010ea
+.gnu.version_r           0x30   0x4010f8
+.rela.dyn                0x30   0x401128
+.rela.plt                0x18   0x401158
+.rodata                  0x10   0x401170
+.eh_frame_hdr            0x2c   0x401180
+.eh_frame                0x8c   0x4011b0
+.note.gnu.property       0x20   0x401240
+.note.ABI-tag            0x20   0x401260
+.init_array               0x8   0x402df8
+.fini_array               0x8   0x402e00
+.dynamic                0x1d0   0x402e08
+.got                     0x10   0x402fd8
+.got.plt                 0x20   0x402fe8
+.data                     0x4   0x403008
+.bss                      0x4   0x40300c
+.comment                 0x5a        0x0
+.annobin.notes          0x14f        0x0
+.gnu.build.attributes   0x144   0x405010
+Total                   0x90a
+
 ```
 (Des informations similaires mais plus détaillées peuvent être obtenues avec les
 commandes readelf –e ou objdump -h). Nous voyons apparaître l’adresse en mémoire
@@ -85,17 +90,20 @@ et la taille (en bytes) des sections qui nous intéressent : .text, .data et .bs
 
 C'est maintenant l'occasion de faire une mini parenthese sur comment est appelee une fonction en assembleur car cela sera utile pour la suite.
 
-### Les registres %eip %ebp et %esp
+### Les registres %eip %ebp et %esp (x86-32 bits) et RIP RSP RBP (x86-64)
 
-#### %eip
+
+Nous avons ici les memes registres mais une difference de nomination et egalement de taille puisque les registres x84-32 bits font 4 octets et les registres x86-64 bits font 8 octets mais les roles restent les memes.
+
+#### %eip || RIP
 
 Extended Instrucion Pointer : c'est le curseur du CPU, il indique quelle instruction executer avec un pointeur sur la suivante.Le CPU fait la boucle suivante : lire instruction a %eip --> executer --> %eip++
 
-#### %esp
+#### %esp || RSP
 
 Extended Stack Pointer : il pointe toujours vers le sommet de la stack, il bouge a chaque push (ajout) ou pop (suppression) sur la stack. On rappele ici que la stack grandit en decrementant les adresses.
 
-#### %ebp
+#### %ebp || RBP
 
 Extended Base Pointer : c'est le point de repere fixe de la fonction, il permet de retrouver ou sont les varaibles et les parametres.Il reste stable pendant toute l'execution de la fonction.
 
@@ -127,6 +135,7 @@ Quand on place dans un espace memoire plus de donnee qu'il ne peut en contenir, 
 
 ```c
 #include <stdio.h>
+#include <string.h>
 
 int main(int ac, char **av)
 {
@@ -160,3 +169,8 @@ ici nous ouvrons avec gdb le coredump de cet executable apres l'avoir execute:
                 #1  0x4141414141414141 n/a (n/a + 0x0)
                 ELF object binary architecture: AMD x86-64
 ```
+
+Nous voyons bien que l'adresse #1 a ete modifie en 0x4141414141414141 ce qui signifie "AAAAAAAA".La ligne #0 nous indique a quel endroit du programme on etait lorsque le segfault a ete recu.Nous avons bien modifie l'adresse de retour par "AAAAAAAA", et cette adresse ne mene nulle part ici, mais quelqu'un peut tres bien injecter une adresse valide d'un autre code ou pour ouvrir un shell.
+
+Il faut neanmoins savoir que pour faire crasher ce programme, il faut rentrer une valeur >= 264, et non 256, mais pourquoi ?
+Le code a ete executee sur une machine x86-64, donc apres le buffer, on trouve d'abord le RIP (8 octets), puis l'adresse de retour (8 octets).Des que on va commencer a toucher a l'adresse de retour, le programme va crasher donc ici 256 + 8 = 264.
